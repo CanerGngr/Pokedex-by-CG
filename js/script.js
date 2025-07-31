@@ -78,6 +78,8 @@ async function fetchPokemonDetails(url) {
         hp: pokemon.stats[0].base_stat,
         attack: pokemon.stats[1].base_stat,
         defense: pokemon.stats[2].base_stat,
+        specialAttack: pokemon.stats[3].base_stat,
+        specialDefense: pokemon.stats[4].base_stat,
         speed: pokemon.stats[5].base_stat
       },
       abilities: pokemon.abilities.map(ability => ability.ability.name.charAt(0).toUpperCase() + ability.ability.name.slice(1))
@@ -123,14 +125,30 @@ document.onkeydown = function(event) {
   }
 };
 
+// Create modal structure if it doesn't exist
+function createModalIfNeeded() {
+  let existingModal = document.getElementById("pokemon-modal");
+  if (!existingModal) {
+    let main = document.querySelector("main");
+    main.innerHTML += createModalOverlayTemplate();
+  }
+}
+
+// Populate modal with Pokemon content
+function populateModalContent(pokemon) {
+  let cardInner = document.getElementById("modal-card-inner");
+  
+  cardInner.innerHTML = createModalFrontSideTemplate(pokemon) + createModalBackSideTemplate(pokemon);
+}
+
 // Open Modal Function
 function openModal(pokemonId) {
-  // Find Pokemon by ID
   let pokemon = pokemonData.find(p => p.id === pokemonId);
   if (!pokemon) return;
   
   currentPokemon = pokemon;
-  updateModalContent(pokemon);
+  createModalIfNeeded();
+  populateModalContent(pokemon);
   
   let pokemonModal = document.getElementById("pokemon-modal");
   pokemonModal.style.display = "block";
@@ -165,73 +183,3 @@ function flipCardBack() {
   cardInner.classList.remove("flipped");
 }
 
-
-// Function to Update Modal Content
-function updateModalContent(pokemon) {
-  document.getElementById("modal-pokemon-image").src = pokemon.image;
-  document.getElementById("modal-pokemon-image").alt = pokemon.name;
-  document.getElementById("modal-pokemon-name").textContent = pokemon.name;
-
-  // Format Pokemon ID
-  let pokemonId = pokemon.id.toString();
-  while (pokemonId.length < 3) {
-    pokemonId = "0" + pokemonId;
-  }
-  document.getElementById("modal-pokemon-id").textContent = "#" + pokemonId;
-
-  // Update Pokemon types
-  let modalTypes = document.getElementById("modal-pokemon-types");
-  let typesHTML = "";
-  for (let i = 0; i < pokemon.types.length; i++) {
-    typesHTML +=
-      '<span class="type-badge ' +
-      pokemon.types[i].toLowerCase() +
-      '">' +
-      pokemon.types[i] +
-      "</span>";
-  }
-  modalTypes.innerHTML = typesHTML;
-
-  document.getElementById("modal-pokemon-description").textContent =
-    pokemon.description;
-  document.getElementById("modal-pokemon-height").textContent = pokemon.height;
-  document.getElementById("modal-pokemon-weight").textContent = pokemon.weight;
-  document.getElementById("modal-pokemon-generation").textContent =
-    pokemon.generation;
-
-  // Update stats
-  let statBars = document.getElementsByClassName("stat-fill");
-  let statValues = document.getElementsByClassName("stat-value");
-
-  let hpPercent = (pokemon.stats.hp / 150) * 100;
-  statBars[0].style.width = hpPercent + "%";
-  statValues[0].textContent = pokemon.stats.hp;
-
-  let attackPercent = (pokemon.stats.attack / 150) * 100;
-  statBars[1].style.width = attackPercent + "%";
-  statValues[1].textContent = pokemon.stats.attack;
-
-  let defensePercent = (pokemon.stats.defense / 150) * 100;
-  statBars[2].style.width = defensePercent + "%";
-  statValues[2].textContent = pokemon.stats.defense;
-
-  let speedPercent = (pokemon.stats.speed / 150) * 100;
-  statBars[3].style.width = speedPercent + "%";
-  statValues[3].textContent = pokemon.stats.speed;
-
-  // Update abilities
-  let abilitiesContainers = document.getElementsByClassName("abilities");
-  let abilitiesContainer = abilitiesContainers[0];
-  let abilitiesHTML = "";
-  for (let i = 0; i < pokemon.abilities.length; i++) {
-    abilitiesHTML +=
-      '<span class="ability-badge">' + pokemon.abilities[i] + "</span>";
-  }
-  abilitiesContainer.innerHTML = abilitiesHTML;
-
-  // Adapt modal background to Pokemon type
-  let cardFrontElements = document.getElementsByClassName("card-front");
-  let cardFront = cardFrontElements[0];
-  let primaryType = pokemon.types[0].toLowerCase();
-  cardFront.className = "card-front " + primaryType;
-}

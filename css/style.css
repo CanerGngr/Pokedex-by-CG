@@ -224,8 +224,20 @@ body {
   background: linear-gradient(90deg, #42a5f5, #2196f3);
 }
 
+.stat-fill.sp-att {
+  background: linear-gradient(90deg, #ab47bc, #9c27b0);
+}
+
+.stat-fill.sp-def {
+  background: linear-gradient(90deg, #5c6bc0, #3f51b5);
+}
+
 .stat-fill.speed {
   background: linear-gradient(90deg, #66bb6a, #4caf50);
+}
+
+.stat-fill.total {
+  background: linear-gradient(90deg, #78909c, #607d8b);
 }
 
 .stat-value {
