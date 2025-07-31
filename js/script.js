@@ -50,6 +50,7 @@ function finalizePokemonLoading() {
   if (leadElements.length > 0) {
     leadElements[0].textContent = 'Click on any Pokemon to see details!';
   }
+  initializeSearch();
 }
 
 // Handle errors during Pokemon loading

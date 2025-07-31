@@ -54,6 +54,29 @@ function createPageHeaderTemplate() {
   return '<div class="text-center mb-4">' +
          '<h1 class="display-4 mb-3">Pokedex</h1>' +
          '<p class="lead text-muted">Loading Pokemon...</p>' +
+         '</div>' +
+         createSearchBarTemplate();
+}
+
+// Template for search bar
+function createSearchBarTemplate() {
+  return '<div class="search-container mb-4">' +
+         '<div class="row justify-content-center">' +
+         '<div class="col-md-6">' +
+         '<div class="input-group">' +
+         '<span class="input-group-text">' +
+         '<svg width="16" height="16" fill="currentColor" class="bi bi-search" viewBox="0 0 16 16">' +
+         '<path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z"/>' +
+         '</svg>' +
+         '</span>' +
+         '<input type="text" class="form-control" id="pokemon-search-input" placeholder="Search by name, ID, or type (e.g., \'pika\', \'25\', \'fire\', \'grass\')..." oninput="searchPokemon()">' +
+         '<button class="btn btn-outline-secondary" type="button" onclick="clearSearch()">Clear</button>' +
+         '</div>' +
+         '<div class="text-center mt-2">' +
+         '<small id="search-results-count" class="text-muted"></small>' +
+         '</div>' +
+         '</div>' +
+         '</div>' +
          '</div>';
 }
 
