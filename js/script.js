@@ -12,82 +12,156 @@ document.addEventListener('DOMContentLoaded', function() {
 // Fetch Pokemon from PokeAPI
 async function loadPokemonList() {
   try {
-    let response = await fetch('https://pokeapi.co/api/v2/pokemon?limit=20&offset=0');
-    let data = await response.json();
-    
-    // Clear existing static content and show loading  
-    let container = document.querySelector('.container.py-4');
-    if (!container) {
-      container = document.querySelector('.container');
-    }
-    container.innerHTML = createPageHeaderTemplate() + createPokemonGridTemplate();
-    
-    // Fetch detailed data for each Pokemon
-    for (let i = 0; i < data.results.length; i++) {
-      let pokemon = data.results[i];
-      let pokemonDetails = await fetchPokemonDetails(pokemon.url);
-      pokemonData.push(pokemonDetails);
-      addPokemonCard(pokemonDetails);
-    }
-    
-    // Update loading message once all Pokemon are loaded
-    let leadElements = document.getElementsByClassName('lead');
-    if (leadElements.length > 0) {
-      leadElements[0].textContent = 'Click on any Pokemon to see details!';
-    }
+    initializePage();
+    let pokemonList = await fetchPokemonListData();
+    await loadAllPokemonDetails(pokemonList);
+    finalizePokemonLoading();
   } catch (error) {
-    console.error('Error loading Pokemon:', error);
-    let container = document.querySelector('.container.py-4');
-    if (!container) {
-      container = document.querySelector('.container');
-    }
-    container.innerHTML = createErrorTemplate('Failed to load Pokemon data. Please try again later.');
+    handleLoadingError(error);
   }
+}
+
+// Initialize page with loading state
+function initializePage() {
+  let container = findContainer();
+  container.innerHTML = createPageHeaderTemplate() + createPokemonGridTemplate();
+}
+
+// Fetch initial Pokemon list from API
+async function fetchPokemonListData() {
+  let response = await fetch('https://pokeapi.co/api/v2/pokemon?limit=20&offset=0');
+  let data = await response.json();
+  return data.results;
+}
+
+// Load detailed data for all Pokemon
+async function loadAllPokemonDetails(pokemonList) {
+  for (let i = 0; i < pokemonList.length; i++) {
+    let pokemon = pokemonList[i];
+    let pokemonDetails = await fetchPokemonDetails(pokemon.url);
+    pokemonData.push(pokemonDetails);
+    addPokemonCard(pokemonDetails);
+  }
+}
+
+// Update UI when Pokemon loading is complete
+function finalizePokemonLoading() {
+  let leadElements = document.getElementsByClassName('lead');
+  if (leadElements.length > 0) {
+    leadElements[0].textContent = 'Click on any Pokemon to see details!';
+  }
+}
+
+// Handle errors during Pokemon loading
+function handleLoadingError(error) {
+  console.error('Error loading Pokemon:', error);
+  let container = findContainer();
+  container.innerHTML = createErrorTemplate('Failed to load Pokemon data. Please try again later.');
+}
+
+// Find the correct container element
+function findContainer() {
+  let container = document.querySelector('.container.py-4');
+  if (!container) {
+    container = document.querySelector('.container');
+  }
+  return container;
 }
 
 // Fetch detailed Pokemon data
 async function fetchPokemonDetails(url) {
   try {
-    let response = await fetch(url);
-    let pokemon = await response.json();
-    
-    // Get species data for description
-    let speciesResponse = await fetch(pokemon.species.url);
-    let speciesData = await speciesResponse.json();
-    
-    // Find English description
-    let description = 'No description available';
-    for (let i = 0; i < speciesData.flavor_text_entries.length; i++) {
-      let entry = speciesData.flavor_text_entries[i];
-      if (entry.language.name === 'en') {
-        description = entry.flavor_text.replace(/\f/g, ' ');
-        break;
-      }
-    }
-    
-    return {
-      id: pokemon.id,
-      name: pokemon.name.charAt(0).toUpperCase() + pokemon.name.slice(1),
-      image: pokemon.sprites.other['official-artwork'].front_default || pokemon.sprites.front_default,
-      types: pokemon.types.map(type => type.type.name.charAt(0).toUpperCase() + type.type.name.slice(1)),
-      height: (pokemon.height / 10) + ' m',
-      weight: (pokemon.weight / 10) + ' kg',
-      description: description,
-      generation: getGeneration(pokemon.id),
-      stats: {
-        hp: pokemon.stats[0].base_stat,
-        attack: pokemon.stats[1].base_stat,
-        defense: pokemon.stats[2].base_stat,
-        specialAttack: pokemon.stats[3].base_stat,
-        specialDefense: pokemon.stats[4].base_stat,
-        speed: pokemon.stats[5].base_stat
-      },
-      abilities: pokemon.abilities.map(ability => ability.ability.name.charAt(0).toUpperCase() + ability.ability.name.slice(1))
-    };
+    let pokemon = await fetchBasicPokemonData(url);
+    let speciesData = await fetchPokemonSpecies(pokemon.species.url);
+    let description = extractEnglishDescription(speciesData);
+    return buildPokemonObject(pokemon, description);
   } catch (error) {
     console.error('Error fetching Pokemon details:', error);
     return null;
   }
+}
+
+// Fetch basic Pokemon data from API
+async function fetchBasicPokemonData(url) {
+  let response = await fetch(url);
+  return await response.json();
+}
+
+// Fetch Pokemon species data for description
+async function fetchPokemonSpecies(speciesUrl) {
+  let response = await fetch(speciesUrl);
+  return await response.json();
+}
+
+// Extract English description from species data
+function extractEnglishDescription(speciesData) {
+  let description = 'No description available';
+  for (let i = 0; i < speciesData.flavor_text_entries.length; i++) {
+    let entry = speciesData.flavor_text_entries[i];
+    if (entry.language.name === 'en') {
+      description = entry.flavor_text.replace(/\f/g, ' ');
+      break;
+    }
+  }
+  return description;
+}
+
+// Build complete Pokemon object with all data
+function buildPokemonObject(pokemon, description) {
+  return {
+    id: pokemon.id,
+    name: formatPokemonName(pokemon.name),
+    image: getPokemonImage(pokemon.sprites),
+    types: formatPokemonTypes(pokemon.types),
+    height: formatHeight(pokemon.height),
+    weight: formatWeight(pokemon.weight),
+    description: description,
+    generation: getGeneration(pokemon.id),
+    stats: formatPokemonStats(pokemon.stats),
+    abilities: formatPokemonAbilities(pokemon.abilities)
+  };
+}
+
+// Format Pokemon name with proper capitalization
+function formatPokemonName(name) {
+  return name.charAt(0).toUpperCase() + name.slice(1);
+}
+
+// Get best available Pokemon image
+function getPokemonImage(sprites) {
+  return sprites.other['official-artwork'].front_default || sprites.front_default;
+}
+
+// Format Pokemon types with proper capitalization
+function formatPokemonTypes(types) {
+  return types.map(type => type.type.name.charAt(0).toUpperCase() + type.type.name.slice(1));
+}
+
+// Format height in meters
+function formatHeight(height) {
+  return (height / 10) + ' m';
+}
+
+// Format weight in kilograms
+function formatWeight(weight) {
+  return (weight / 10) + ' kg';
+}
+
+// Format Pokemon stats object
+function formatPokemonStats(stats) {
+  return {
+    hp: stats[0].base_stat,
+    attack: stats[1].base_stat,
+    defense: stats[2].base_stat,
+    specialAttack: stats[3].base_stat,
+    specialDefense: stats[4].base_stat,
+    speed: stats[5].base_stat
+  };
+}
+
+// Format Pokemon abilities with proper capitalization
+function formatPokemonAbilities(abilities) {
+  return abilities.map(ability => ability.ability.name.charAt(0).toUpperCase() + ability.ability.name.slice(1));
 }
 
 // Get generation based on Pokemon ID

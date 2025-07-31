@@ -57,3 +57,113 @@
 .card-front.bug { background: linear-gradient(135deg, var(--bug-color), var(--bug-dark)); }
 .card-front.ghost { background: linear-gradient(135deg, var(--ghost-color), var(--ghost-dark)); }
 .card-front.steel { background: linear-gradient(135deg, var(--steel-color), var(--steel-dark)); }
+
+/* Pokemon Type Icons */
+.type-icon {
+  display: inline-block;
+  width: 20px;
+  height: 20px;
+  margin-right: 5px;
+  vertical-align: middle;
+}
+
+.type-icon.large {
+  width: 32px;
+  height: 32px;
+}
+
+.type-icon.small {
+  width: 16px;
+  height: 16px;
+}
+
+/* Type-specific icon styling with color filters */
+.type-icon.grass { 
+  content: url('../assets/icons/grass.svg');
+  filter: brightness(0) invert(1);
+}
+
+.type-icon.poison { 
+  content: url('../assets/icons/poison.svg');
+  filter: brightness(0) invert(1);
+}
+
+.type-icon.fire { 
+  content: url('../assets/icons/fire.svg');
+  filter: brightness(0) invert(1);
+}
+
+.type-icon.water { 
+  content: url('../assets/icons/water.svg');
+  filter: brightness(0) invert(1);
+}
+
+.type-icon.electric { 
+  content: url('../assets/icons/electric.svg');
+  filter: brightness(0) invert(1);
+}
+
+.type-icon.psychic { 
+  content: url('../assets/icons/psychic.svg');
+  filter: brightness(0) invert(1);
+}
+
+.type-icon.ice { 
+  content: url('../assets/icons/ice.svg');
+  filter: brightness(0) invert(1);
+}
+
+.type-icon.dragon { 
+  content: url('../assets/icons/dragon.svg');
+  filter: brightness(0) invert(1);
+}
+
+.type-icon.dark { 
+  content: url('../assets/icons/dark.svg');
+  filter: brightness(0) invert(1);
+}
+
+.type-icon.fairy { 
+  content: url('../assets/icons/fairy.svg');
+  filter: brightness(0) invert(1);
+}
+
+.type-icon.normal { 
+  content: url('../assets/icons/normal.svg');
+  filter: brightness(0) invert(1);
+}
+
+.type-icon.fighting { 
+  content: url('../assets/icons/fighting.svg');
+  filter: brightness(0) invert(1);
+}
+
+.type-icon.flying { 
+  content: url('../assets/icons/flying.svg');
+  filter: brightness(0) invert(1);
+}
+
+.type-icon.ground { 
+  content: url('../assets/icons/ground.svg');
+  filter: brightness(0) invert(1);
+}
+
+.type-icon.rock { 
+  content: url('../assets/icons/rock.svg');
+  filter: brightness(0) invert(1);
+}
+
+.type-icon.bug { 
+  content: url('../assets/icons/bug.svg');
+  filter: brightness(0) invert(1);
+}
+
+.type-icon.ghost { 
+  content: url('../assets/icons/ghost.svg');
+  filter: brightness(0) invert(1);
+}
+
+.type-icon.steel { 
+  content: url('../assets/icons/steel.svg');
+  filter: brightness(0) invert(1);
+}
