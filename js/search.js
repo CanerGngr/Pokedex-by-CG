@@ -27,32 +27,13 @@ function searchPokemon() {
   }
 }
 
-// Core search logic for name, ID, and type matching
+// Core search logic coordinator
 function performSearch(query) {
   searchResults = [];
   
   for (let i = 0; i < pokemonData.length; i++) {
     let pokemon = pokemonData[i];
-    let matchFound = false;
-    
-    // Search by name (case-insensitive partial matching)
-    if (pokemon.name.toLowerCase().includes(query)) {
-      matchFound = true;
-    }
-    
-    // Search by ID (exact or partial number matching)
-    let pokemonIdString = pokemon.id.toString();
-    if (pokemonIdString.includes(query)) {
-      matchFound = true;
-    }
-    
-    // Search by type (case-insensitive partial matching)
-    for (let j = 0; j < pokemon.types.length; j++) {
-      if (pokemon.types[j].toLowerCase().includes(query)) {
-        matchFound = true;
-        break;
-      }
-    }
+    let matchFound = checkPokemonMatch(pokemon, query);
     
     if (matchFound) {
       searchResults.push(pokemon);
@@ -60,6 +41,33 @@ function performSearch(query) {
   }
   
   filterPokemonCards(searchResults);
+}
+
+// Check if Pokemon matches search query
+function checkPokemonMatch(pokemon, query) {
+  // Search by name (case-insensitive partial matching)
+  if (pokemon.name.toLowerCase().includes(query)) {
+    return true;
+  }
+  
+  // Search by ID (exact or partial number matching)
+  let pokemonIdString = pokemon.id.toString();
+  if (pokemonIdString.includes(query)) {
+    return true;
+  }
+  
+  // Search by type
+  return checkTypeMatch(pokemon.types, query);
+}
+
+// Check if any Pokemon type matches query
+function checkTypeMatch(types, query) {
+  for (let i = 0; i < types.length; i++) {
+    if (types[i].toLowerCase().includes(query)) {
+      return true;
+    }
+  }
+  return false;
 }
 
 // Show/hide cards based on search results
@@ -71,16 +79,20 @@ function filterPokemonCards(filteredData) {
   
   // Add only the filtered Pokemon cards back to the grid
   for (let i = 0; i < filteredData.length; i++) {
-    let pokemon = filteredData[i];
-    let cardHTML = createPokemonCardHTML(pokemon);
-    
-    let cardContainer = document.createElement('div');
-    cardContainer.innerHTML = cardHTML;
-    
-    grid.appendChild(cardContainer);
+    createAndAppendCard(filteredData[i], grid);
   }
   
   updateSearchResultsCount();
+}
+
+// Create and append a single Pokemon card
+function createAndAppendCard(pokemon, grid) {
+  let cardHTML = createPokemonCardHTML(pokemon);
+  
+  let cardContainer = document.createElement('div');
+  cardContainer.innerHTML = cardHTML;
+  
+  grid.appendChild(cardContainer);
 }
 
 // Show all Pokemon cards
