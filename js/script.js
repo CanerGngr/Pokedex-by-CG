@@ -280,14 +280,26 @@ function closeModal() {
 function flipCard() {
   let cardInnerElements = document.getElementsByClassName("card-inner");
   let cardInner = cardInnerElements[0];
+  
+  hideArrowsWithTransition();
   cardInner.classList.add("flipped");
+  
+  setTimeout(function() {
+    showArrowsWithTransition();
+  }, 800);
 }
 
 // Flip Card Back Function (to Info Side)
 function flipCardBack() {
   let cardInnerElements = document.getElementsByClassName("card-inner");
   let cardInner = cardInnerElements[0];
+  
+  hideArrowsWithTransition();
   cardInner.classList.remove("flipped");
+  
+  setTimeout(function() {
+    showArrowsWithTransition();
+  }, 800);
 }
 
 // Show more Pokemon (reveal hidden cards)
@@ -395,5 +407,35 @@ function updateModalNavigation() {
   if (leftArrow && rightArrow) {
     leftArrow.style.display = pokemonData.length > 1 ? "flex" : "none";
     rightArrow.style.display = pokemonData.length > 1 ? "flex" : "none";
+  }
+}
+
+// Hide arrows with fade out transition
+function hideArrowsWithTransition() {
+  let leftArrow = document.getElementById("modal-nav-left");
+  let rightArrow = document.getElementById("modal-nav-right");
+
+  if (leftArrow) {
+    leftArrow.classList.remove("arrow-fade-in");
+    leftArrow.classList.add("arrow-fade-out");
+  }
+  if (rightArrow) {
+    rightArrow.classList.remove("arrow-fade-in");
+    rightArrow.classList.add("arrow-fade-out");
+  }
+}
+
+// Show arrows with fade in transition
+function showArrowsWithTransition() {
+  let leftArrow = document.getElementById("modal-nav-left");
+  let rightArrow = document.getElementById("modal-nav-right");
+
+  if (leftArrow && leftArrow.style.display !== "none") {
+    leftArrow.classList.remove("arrow-fade-out");
+    leftArrow.classList.add("arrow-fade-in");
+  }
+  if (rightArrow && rightArrow.style.display !== "none") {
+    rightArrow.classList.remove("arrow-fade-out");
+    rightArrow.classList.add("arrow-fade-in");
   }
 }
