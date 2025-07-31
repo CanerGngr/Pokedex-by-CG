@@ -188,3 +188,15 @@ function createAbilitiesTemplate(abilities) {
          '<div class="abilities">' + abilitiesHTML + '</div>' +
          '</div>';
 }
+
+// Template for Show More button
+function createShowMoreButtonTemplate() {
+  return '<button id="show-more-btn" class="btn btn-primary btn-lg" onclick="showMorePokemon()">' +
+         'Show More' +
+         '</button>';
+}
+
+// Template for Show Less button  
+function createShowLessButtonTemplate() {
+  return '<button id="show-less-btn" class="btn btn-outline-secondary btn-lg" onclick="showLessPokemon()">Show Less</button>';
+}

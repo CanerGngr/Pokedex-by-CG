@@ -3,6 +3,13 @@
 // Global variables
 let pokemonData = [];
 let currentPokemon = null;
+let currentOffset = 0;
+let pokemonPerPage = 50;
+let initialDisplayCount = 20;
+let maxDisplayCount = 50;
+let currentDisplayCount = 20;
+let totalPokemonCount = 0;
+let isLoading = false;
 
 // Initialize app when page loads
 document.addEventListener('DOMContentLoaded', function() {
@@ -24,13 +31,14 @@ async function loadPokemonList() {
 // Initialize page with loading state
 function initializePage() {
   let container = findContainer();
-  container.innerHTML = createPageHeaderTemplate() + createPokemonGridTemplate();
+  container.innerHTML = createPageHeaderTemplate() + createPokemonGridTemplate() + '<div id="pagination-container" class="text-center mt-4" style="display: none;"></div>';
 }
 
 // Fetch initial Pokemon list from API
 async function fetchPokemonListData() {
-  let response = await fetch('https://pokeapi.co/api/v2/pokemon?limit=20&offset=0');
+  let response = await fetch(`https://pokeapi.co/api/v2/pokemon?limit=${pokemonPerPage}&offset=${currentOffset}`);
   let data = await response.json();
+  totalPokemonCount = data.count;
   return data.results;
 }
 
@@ -51,6 +59,7 @@ function finalizePokemonLoading() {
     leadElements[0].textContent = 'Click on any Pokemon to see details!';
   }
   initializeSearch();
+  updatePaginationButton();
 }
 
 // Handle errors during Pokemon loading
@@ -186,7 +195,13 @@ function addPokemonCard(pokemon) {
   let cardHTML = createPokemonCardHTML(pokemon);
   
   let cardContainer = document.createElement('div');
+  cardContainer.setAttribute('data-pokemon-id', pokemon.id);
   cardContainer.innerHTML = cardHTML;
+  
+  // Hide cards beyond initial display count
+  if (pokemonData.length > initialDisplayCount) {
+    cardContainer.style.display = 'none';
+  }
   
   grid.appendChild(cardContainer);
 }
@@ -256,5 +271,49 @@ function flipCardBack() {
   let cardInnerElements = document.getElementsByClassName("card-inner");
   let cardInner = cardInnerElements[0];
   cardInner.classList.remove("flipped");
+}
+
+// Show more Pokemon (reveal hidden cards)
+function showMorePokemon() {
+  let pokemonCards = document.querySelectorAll('#pokemon-grid > [data-pokemon-id]');
+  
+  for (let i = initialDisplayCount; i < maxDisplayCount && i < pokemonCards.length; i++) {
+    pokemonCards[i].style.display = 'block';
+  }
+  
+  currentDisplayCount = maxDisplayCount;
+  updatePaginationButton();
+}
+
+// Show less Pokemon (hide cards 21-50, show only first 20)
+function showLessPokemon() {
+  let pokemonCards = document.querySelectorAll('#pokemon-grid > [data-pokemon-id]');
+  
+  for (let i = initialDisplayCount; i < pokemonCards.length; i++) {
+    pokemonCards[i].style.display = 'none';
+  }
+  
+  currentDisplayCount = initialDisplayCount;
+  updatePaginationButton();
+}
+
+// Update pagination button based on current state
+function updatePaginationButton() {
+  let container = document.getElementById('pagination-container');
+  
+  if (pokemonData.length === 0) {
+    container.style.display = 'none';
+    return;
+  }
+  
+  container.style.display = 'block';
+  
+  if (currentDisplayCount === initialDisplayCount && pokemonData.length > initialDisplayCount) {
+    container.innerHTML = createShowMoreButtonTemplate();
+  } else if (currentDisplayCount === maxDisplayCount) {
+    container.innerHTML = createShowLessButtonTemplate();
+  } else {
+    container.style.display = 'none';
+  }
 }
 
