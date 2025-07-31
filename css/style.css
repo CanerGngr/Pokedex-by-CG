@@ -445,7 +445,7 @@ footer {
   .modal-nav-arrow {
     width: 40px !important;
     height: 40px !important;
-    top: 50% !important;
+    bottom: 15px !important;
   }
 
   .modal-nav-left {
@@ -460,8 +460,7 @@ footer {
 /* Modal Navigation Arrows */
 .modal-nav-arrow {
   position: absolute;
-  top: 50%;
-  transform: translateY(-50%);
+  bottom: 20px;
   width: 50px;
   height: 50px;
   background: rgba(255, 255, 255, 0.9);
@@ -471,14 +470,14 @@ footer {
   display: flex;
   align-items: center;
   justify-content: center;
-  z-index: 1000;
+  z-index: 1051;
   transition: all 0.3s ease;
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
 }
 
 .modal-nav-arrow:hover {
   background: rgba(255, 255, 255, 1);
-  transform: translateY(-50%) scale(1.1);
+  transform: scale(1.1);
 }
 
 .modal-nav-left {

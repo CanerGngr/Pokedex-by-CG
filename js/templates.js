@@ -86,13 +86,13 @@ function createModalOverlayTemplate() {
   return '<div id="pokemon-modal" class="pokemon-modal" onclick="closeModal()">' +
          '<div class="modal-content" onclick="event.stopPropagation()">' +
          '<div class="modal-close" onclick="closeModal()">&times;</div>' +
+         '<div class="pokemon-card-detailed">' +
          '<div class="modal-nav-arrow modal-nav-left" id="modal-nav-left" onclick="navigateToPreviousPokemon()">' +
          '<img src="../assets/icons/arrow-left.svg" alt="Previous" width="24" height="24">' +
          '</div>' +
          '<div class="modal-nav-arrow modal-nav-right" id="modal-nav-right" onclick="navigateToNextPokemon()">' +
          '<img src="../assets/icons/arrow-right.svg" alt="Next" width="24" height="24">' +
          '</div>' +
-         '<div class="pokemon-card-detailed">' +
          '<div class="card-inner" id="modal-card-inner">' +
          '</div>' +
          '</div>' +
