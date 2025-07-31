@@ -30,7 +30,9 @@ function createPokemonCardHTML(pokemon) {
   
   let typeBadges = '';
   for (let i = 0; i < pokemon.types.length; i++) {
-    typeBadges += '<span class="type-badge ' + pokemon.types[i].toLowerCase() + '">' + pokemon.types[i] + '</span>';
+    typeBadges += '<span class="type-badge ' + pokemon.types[i].toLowerCase() + '">' +
+                  '<span class="type-icon ' + pokemon.types[i].toLowerCase() + '"></span>' +
+                  pokemon.types[i] + '</span>';
   }
   
   return '<div class="pokemon-card ' + typeClasses + '" data-pokemon-id="' + pokemon.id + '" onclick="openModal(' + pokemon.id + ')">' +
@@ -73,7 +75,9 @@ function createModalFrontSideTemplate(pokemon) {
   let pokemonId = pokemon.id.toString().padStart(3, '0');
   let typeBadges = '';
   for (let i = 0; i < pokemon.types.length; i++) {
-    typeBadges += '<span class="type-badge ' + pokemon.types[i].toLowerCase() + '">' + pokemon.types[i] + '</span>';
+    typeBadges += '<span class="type-badge ' + pokemon.types[i].toLowerCase() + '">' +
+                  '<span class="type-icon ' + pokemon.types[i].toLowerCase() + '"></span>' +
+                  pokemon.types[i] + '</span>';
   }
   
   return '<div class="card-front ' + pokemon.types[0].toLowerCase() + '">' +
