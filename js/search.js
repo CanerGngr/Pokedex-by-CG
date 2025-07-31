@@ -12,17 +12,36 @@ function initializeSearch() {
   updateSearchResultsCount();
 }
 
-// Main search function triggered by oninput
-function searchPokemon() {
+// Handle search input changes
+function handleSearchInput() {
   let searchInput = document.getElementById('pokemon-search-input');
   searchQuery = searchInput.value.toLowerCase().trim();
+  let searchButton = document.getElementById('search-button');
   
+  // Enable/disable search button based on 3-character minimum
+  if (searchQuery.length >= 3) {
+    searchButton.disabled = false;
+  } else {
+    searchButton.disabled = true;
+  }
+  
+  // Still perform live search for immediate feedback
   if (searchQuery.length === 0) {
     showAllPokemon();
     return;
   }
   
   if (searchQuery.length >= 1) {
+    performSearch(searchQuery);
+  }
+}
+
+// Perform search when button is clicked (requires 3+ characters)
+function performButtonSearch() {
+  let searchInput = document.getElementById('pokemon-search-input');
+  searchQuery = searchInput.value.toLowerCase().trim();
+  
+  if (searchQuery.length >= 3) {
     performSearch(searchQuery);
   }
 }

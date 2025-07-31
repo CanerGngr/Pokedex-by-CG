@@ -24,7 +24,7 @@
     ></script>
     <title>Pokedex by CG</title>
   </head>
-  <body>
+  <body onload="initializeApp()">
     <header>
       <nav class="navbar bg-body-tertiary">
         <div class="container-fluid">
@@ -43,7 +43,7 @@
     </header>
 
     <main>
-      <div class="container py-4">
+      <div id="main-container" class="container py-4">
         <div class="text-center mb-4">
           <h1 class="display-4 mb-3">Pokedex</h1>
           <p class="lead text-muted">Loading Pokemon...</p>

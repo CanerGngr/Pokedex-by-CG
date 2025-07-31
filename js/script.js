@@ -11,10 +11,10 @@ let currentDisplayCount = 20;
 let totalPokemonCount = 0;
 let isLoading = false;
 
-// Initialize app when page loads
-document.addEventListener('DOMContentLoaded', function() {
+// Initialize app when page loads - function to be called from HTML
+function initializeApp() {
   loadPokemonList();
-});
+}
 
 // Fetch Pokemon from PokeAPI
 async function loadPokemonList() {
@@ -71,9 +71,9 @@ function handleLoadingError(error) {
 
 // Find the correct container element
 function findContainer() {
-  let container = document.querySelector('.container.py-4');
+  let container = document.getElementById('main-container');
   if (!container) {
-    container = document.querySelector('.container');
+    container = document.getElementsByClassName('container')[0];
   }
   return container;
 }
@@ -219,7 +219,7 @@ document.onkeydown = function(event) {
 function createModalIfNeeded() {
   let existingModal = document.getElementById("pokemon-modal");
   if (!existingModal) {
-    let main = document.querySelector("main");
+    let main = document.getElementsByTagName("main")[0];
     main.innerHTML += createModalOverlayTemplate();
   }
 }
@@ -239,6 +239,7 @@ function openModal(pokemonId) {
   currentPokemon = pokemon;
   createModalIfNeeded();
   populateModalContent(pokemon);
+  updateModalNavigation();
   
   let pokemonModal = document.getElementById("pokemon-modal");
   pokemonModal.style.display = "block";
@@ -275,7 +276,8 @@ function flipCardBack() {
 
 // Show more Pokemon (reveal hidden cards)
 function showMorePokemon() {
-  let pokemonCards = document.querySelectorAll('#pokemon-grid > [data-pokemon-id]');
+  let pokemonGrid = document.getElementById('pokemon-grid');
+  let pokemonCards = pokemonGrid.children;
   
   for (let i = initialDisplayCount; i < maxDisplayCount && i < pokemonCards.length; i++) {
     pokemonCards[i].style.display = 'block';
@@ -287,7 +289,8 @@ function showMorePokemon() {
 
 // Show less Pokemon (hide cards 21-50, show only first 20)
 function showLessPokemon() {
-  let pokemonCards = document.querySelectorAll('#pokemon-grid > [data-pokemon-id]');
+  let pokemonGrid = document.getElementById('pokemon-grid');
+  let pokemonCards = pokemonGrid.children;
   
   for (let i = initialDisplayCount; i < pokemonCards.length; i++) {
     pokemonCards[i].style.display = 'none';
@@ -314,6 +317,61 @@ function updatePaginationButton() {
     container.innerHTML = createShowLessButtonTemplate();
   } else {
     container.style.display = 'none';
+  }
+}
+
+// Navigate to previous Pokemon in modal
+function navigateToPreviousPokemon() {
+  if (!currentPokemon) return;
+  
+  let currentIndex = findPokemonIndex(currentPokemon.id);
+  let previousIndex = currentIndex - 1;
+  
+  if (previousIndex < 0) {
+    previousIndex = pokemonData.length - 1;
+  }
+  
+  let previousPokemon = pokemonData[previousIndex];
+  currentPokemon = previousPokemon;
+  populateModalContent(previousPokemon);
+  updateModalNavigation();
+}
+
+// Navigate to next Pokemon in modal
+function navigateToNextPokemon() {
+  if (!currentPokemon) return;
+  
+  let currentIndex = findPokemonIndex(currentPokemon.id);
+  let nextIndex = currentIndex + 1;
+  
+  if (nextIndex >= pokemonData.length) {
+    nextIndex = 0;
+  }
+  
+  let nextPokemon = pokemonData[nextIndex];
+  currentPokemon = nextPokemon;
+  populateModalContent(nextPokemon);
+  updateModalNavigation();
+}
+
+// Find Pokemon index in data array
+function findPokemonIndex(pokemonId) {
+  for (let i = 0; i < pokemonData.length; i++) {
+    if (pokemonData[i].id === pokemonId) {
+      return i;
+    }
+  }
+  return 0;
+}
+
+// Update modal navigation button visibility
+function updateModalNavigation() {
+  let leftArrow = document.getElementById('modal-nav-left');
+  let rightArrow = document.getElementById('modal-nav-right');
+  
+  if (leftArrow && rightArrow) {
+    leftArrow.style.display = pokemonData.length > 1 ? 'block' : 'none';
+    rightArrow.style.display = pokemonData.length > 1 ? 'block' : 'none';
   }
 }
 

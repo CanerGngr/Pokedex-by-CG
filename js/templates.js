@@ -69,7 +69,8 @@ function createSearchBarTemplate() {
          '<path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z"/>' +
          '</svg>' +
          '</span>' +
-         '<input type="text" class="form-control" id="pokemon-search-input" placeholder="Search by name, ID, or type (e.g., \'pika\', \'25\', \'fire\', \'grass\')..." oninput="searchPokemon()">' +
+         '<input type="text" class="form-control" id="pokemon-search-input" placeholder="Search by name, ID, or type (e.g., \'pika\', \'25\', \'fire\', \'grass\')..." oninput="handleSearchInput()">' +
+         '<button class="btn btn-primary" type="button" id="search-button" onclick="performButtonSearch()" disabled>Search</button>' +
          '<button class="btn btn-outline-secondary" type="button" onclick="clearSearch()">Clear</button>' +
          '</div>' +
          '<div class="text-center mt-2">' +
@@ -85,6 +86,12 @@ function createModalOverlayTemplate() {
   return '<div id="pokemon-modal" class="pokemon-modal" onclick="closeModal()">' +
          '<div class="modal-content" onclick="event.stopPropagation()">' +
          '<div class="modal-close" onclick="closeModal()">&times;</div>' +
+         '<div class="modal-nav-arrow modal-nav-left" id="modal-nav-left" onclick="navigateToPreviousPokemon()">' +
+         '<img src="../assets/icons/arrow-left.svg" alt="Previous" width="24" height="24">' +
+         '</div>' +
+         '<div class="modal-nav-arrow modal-nav-right" id="modal-nav-right" onclick="navigateToNextPokemon()">' +
+         '<img src="../assets/icons/arrow-right.svg" alt="Next" width="24" height="24">' +
+         '</div>' +
          '<div class="pokemon-card-detailed">' +
          '<div class="card-inner" id="modal-card-inner">' +
          '</div>' +
