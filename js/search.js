@@ -64,25 +64,20 @@ function performSearch(query) {
 
 // Show/hide cards based on search results
 function filterPokemonCards(filteredData) {
-  let allCards = document.querySelectorAll('.pokemon-card');
+  let grid = document.getElementById('pokemon-grid');
   
-  for (let i = 0; i < allCards.length; i++) {
-    let card = allCards[i];
-    let pokemonId = parseInt(card.getAttribute('data-pokemon-id'));
-    let shouldShow = false;
+  // Clear the grid completely
+  grid.innerHTML = '';
+  
+  // Add only the filtered Pokemon cards back to the grid
+  for (let i = 0; i < filteredData.length; i++) {
+    let pokemon = filteredData[i];
+    let cardHTML = createPokemonCardHTML(pokemon);
     
-    for (let j = 0; j < filteredData.length; j++) {
-      if (filteredData[j].id === pokemonId) {
-        shouldShow = true;
-        break;
-      }
-    }
+    let cardContainer = document.createElement('div');
+    cardContainer.innerHTML = cardHTML;
     
-    if (shouldShow) {
-      card.style.display = 'block';
-    } else {
-      card.style.display = 'none';
-    }
+    grid.appendChild(cardContainer);
   }
   
   updateSearchResultsCount();
@@ -90,14 +85,8 @@ function filterPokemonCards(filteredData) {
 
 // Show all Pokemon cards
 function showAllPokemon() {
-  let allCards = document.querySelectorAll('.pokemon-card');
-  
-  for (let i = 0; i < allCards.length; i++) {
-    allCards[i].style.display = 'block';
-  }
-  
   searchResults = pokemonData.slice();
-  updateSearchResultsCount();
+  filterPokemonCards(searchResults);
 }
 
 // Clear search and show all Pokemon
