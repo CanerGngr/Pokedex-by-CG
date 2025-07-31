@@ -1,0 +1,59 @@
+/* Pokemon Type Background Colors */
+.pokemon-card.grass { background: linear-gradient(135deg, var(--grass-color), var(--grass-dark)); }
+.pokemon-card.poison { background: linear-gradient(135deg, var(--poison-color), var(--poison-dark)); }
+.pokemon-card.fire { background: linear-gradient(135deg, var(--fire-color), var(--fire-dark)); }
+.pokemon-card.water { background: linear-gradient(135deg, var(--water-color), var(--water-dark)); }
+.pokemon-card.electric { background: linear-gradient(135deg, var(--electric-color), var(--electric-dark)); }
+.pokemon-card.psychic { background: linear-gradient(135deg, var(--psychic-color), var(--psychic-dark)); }
+.pokemon-card.ice { background: linear-gradient(135deg, var(--ice-color), var(--ice-dark)); }
+.pokemon-card.dragon { background: linear-gradient(135deg, var(--dragon-color), var(--dragon-dark)); }
+.pokemon-card.dark { background: linear-gradient(135deg, var(--dark-color), var(--dark-dark)); }
+.pokemon-card.fairy { background: linear-gradient(135deg, var(--fairy-color), var(--fairy-dark)); }
+.pokemon-card.normal { background: linear-gradient(135deg, var(--normal-color), var(--normal-dark)); }
+.pokemon-card.fighting { background: linear-gradient(135deg, var(--fighting-color), var(--fighting-dark)); }
+.pokemon-card.flying { background: linear-gradient(135deg, var(--flying-color), var(--flying-dark)); }
+.pokemon-card.ground { background: linear-gradient(135deg, var(--ground-color), var(--ground-dark)); }
+.pokemon-card.rock { background: linear-gradient(135deg, var(--rock-color), var(--rock-dark)); }
+.pokemon-card.bug { background: linear-gradient(135deg, var(--bug-color), var(--bug-dark)); }
+.pokemon-card.ghost { background: linear-gradient(135deg, var(--ghost-color), var(--ghost-dark)); }
+.pokemon-card.steel { background: linear-gradient(135deg, var(--steel-color), var(--steel-dark)); }
+
+/* Type Badge Colors */
+.type-badge.grass { background-color: var(--grass-color); }
+.type-badge.poison { background-color: var(--poison-color); }
+.type-badge.fire { background-color: var(--fire-color); }
+.type-badge.water { background-color: var(--water-color); }
+.type-badge.electric { background-color: var(--electric-color); color: #333; }
+.type-badge.psychic { background-color: var(--psychic-color); }
+.type-badge.ice { background-color: var(--ice-color); color: #333; }
+.type-badge.dragon { background-color: var(--dragon-color); }
+.type-badge.dark { background-color: var(--dark-color); }
+.type-badge.fairy { background-color: var(--fairy-color); }
+.type-badge.normal { background-color: var(--normal-color); }
+.type-badge.fighting { background-color: var(--fighting-color); }
+.type-badge.flying { background-color: var(--flying-color); }
+.type-badge.ground { background-color: var(--ground-color); color: #333; }
+.type-badge.rock { background-color: var(--rock-color); }
+.type-badge.bug { background-color: var(--bug-color); }
+.type-badge.ghost { background-color: var(--ghost-color); }
+.type-badge.steel { background-color: var(--steel-color); color: #333; }
+
+/* Modal Background Colors by Type */
+.card-front.grass { background: linear-gradient(135deg, var(--grass-color), var(--grass-dark)); }
+.card-front.poison { background: linear-gradient(135deg, var(--poison-color), var(--poison-dark)); }
+.card-front.fire { background: linear-gradient(135deg, var(--fire-color), var(--fire-dark)); }
+.card-front.water { background: linear-gradient(135deg, var(--water-color), var(--water-dark)); }
+.card-front.electric { background: linear-gradient(135deg, var(--electric-color), var(--electric-dark)); }
+.card-front.psychic { background: linear-gradient(135deg, var(--psychic-color), var(--psychic-dark)); }
+.card-front.ice { background: linear-gradient(135deg, var(--ice-color), var(--ice-dark)); }
+.card-front.dragon { background: linear-gradient(135deg, var(--dragon-color), var(--dragon-dark)); }
+.card-front.dark { background: linear-gradient(135deg, var(--dark-color), var(--dark-dark)); }
+.card-front.fairy { background: linear-gradient(135deg, var(--fairy-color), var(--fairy-dark)); }
+.card-front.normal { background: linear-gradient(135deg, var(--normal-color), var(--normal-dark)); }
+.card-front.fighting { background: linear-gradient(135deg, var(--fighting-color), var(--fighting-dark)); }
+.card-front.flying { background: linear-gradient(135deg, var(--flying-color), var(--flying-dark)); }
+.card-front.ground { background: linear-gradient(135deg, var(--ground-color), var(--ground-dark)); }
+.card-front.rock { background: linear-gradient(135deg, var(--rock-color), var(--rock-dark)); }
+.card-front.bug { background: linear-gradient(135deg, var(--bug-color), var(--bug-dark)); }
+.card-front.ghost { background: linear-gradient(135deg, var(--ghost-color), var(--ghost-dark)); }
+.card-front.steel { background: linear-gradient(135deg, var(--steel-color), var(--steel-dark)); }

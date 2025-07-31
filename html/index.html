@@ -3,11 +3,13 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="icon" href="/assets/favicon/twotone-catching-pokemon.svg" />
-    <link rel="stylesheet" href="/css/style.css" />
-    <link rel="stylesheet" href="/css/colors.css" />
-    <script src="/js/script.js"></script>
-    <script src="/js/templates.js"></script>
+    <link rel="icon" href="../assets/favicon/twotone-catching-pokemon.svg" />
+    <link rel="stylesheet" href="../css/style.css" />
+    <link rel="stylesheet" href="../css/colors.css" />
+    <link rel="stylesheet" href="../css/pokemon-types.css" />
+    <script src="../js/templates.js"></script>
+    <script src="../js/utils.js"></script>
+    <script src="../js/script.js"></script>
     <link
       href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css"
       rel="stylesheet"
@@ -25,18 +27,131 @@
     <header>
       <nav class="navbar bg-body-tertiary">
         <div class="container-fluid">
-          <a class="navbar-brand" href="#">
+          <a class="navbar-brand d-flex align-items-center" href="#">
             <img
-              src="/assets/logos/pokemon-tcgp.svg"
+              src="../assets/logos/pokemon-tcgp.svg"
               alt="Logo"
               width="50"
               height="50"
               class="d-inline-block align-text-top"
             />
-            Bootstrap
+            Pokedex by CG
           </a>
         </div>
       </nav>
     </header>
+
+    <main>
+      <div class="container py-4">
+        <div class="text-center mb-4">
+          <h1 class="display-4 mb-3">Pokedex</h1>
+          <p class="lead text-muted">Loading Pokemon...</p>
+        </div>
+        <div id="pokemon-grid">
+          <!-- Pokemon cards will be loaded here -->
+        </div>
+      </div>
+
+      <!-- Modal Overlay -->
+      <div id="pokemon-modal" class="pokemon-modal" onclick="closeModal()">
+        <div class="modal-content" onclick="event.stopPropagation()">
+          <div class="modal-close" onclick="closeModal()">&times;</div>
+          <div class="pokemon-card-detailed">
+            <div class="card-inner">
+              <!-- Front Side -->
+              <div class="card-front">
+                <div class="detailed-image-container">
+                  <img id="modal-pokemon-image" src="/assets/img/bulbasaur.png" alt="Pokemon" class="detailed-pokemon-image">
+                </div>
+                <div class="detailed-info">
+                  <h2 id="modal-pokemon-name">Bulbasaur</h2>
+                  <span id="modal-pokemon-id">#001</span>
+                  <div id="modal-pokemon-types" class="pokemon-types">
+                    <span class="type-badge grass">Grass</span>
+                    <span class="type-badge poison">Poison</span>
+                  </div>
+                  <p id="modal-pokemon-description" class="pokemon-description">
+                    A strange seed was planted on its back at birth. The plant sprouts and grows with this Pokémon.
+                  </p>
+                  <div class="pokemon-details">
+                    <div class="detail-item">
+                      <span class="detail-label">Height:</span>
+                      <span id="modal-pokemon-height">0.7 m</span>
+                    </div>
+                    <div class="detail-item">
+                      <span class="detail-label">Weight:</span>
+                      <span id="modal-pokemon-weight">6.9 kg</span>
+                    </div>
+                    <div class="detail-item">
+                      <span class="detail-label">Generation:</span>
+                      <span id="modal-pokemon-generation">I</span>
+                    </div>
+                  </div>
+                  <button class="flip-button" onclick="flipCard()">View Stats</button>
+                </div>
+              </div>
+              
+              <!-- Back Side -->
+              <div class="card-back">
+                <div class="stats-container">
+                  <h3>Base Stats</h3>
+                  <div class="stat-item">
+                    <span class="stat-name">HP</span>
+                    <div class="stat-bar">
+                      <div class="stat-fill hp" style="width: 30%"></div>
+                    </div>
+                    <span class="stat-value">45</span>
+                  </div>
+                  <div class="stat-item">
+                    <span class="stat-name">Attack</span>
+                    <div class="stat-bar">
+                      <div class="stat-fill attack" style="width: 33%"></div>
+                    </div>
+                    <span class="stat-value">49</span>
+                  </div>
+                  <div class="stat-item">
+                    <span class="stat-name">Defense</span>
+                    <div class="stat-bar">
+                      <div class="stat-fill defense" style="width: 33%"></div>
+                    </div>
+                    <span class="stat-value">49</span>
+                  </div>
+                  <div class="stat-item">
+                    <span class="stat-name">Speed</span>
+                    <div class="stat-bar">
+                      <div class="stat-fill speed" style="width: 30%"></div>
+                    </div>
+                    <span class="stat-value">45</span>
+                  </div>
+                  <div class="abilities-section">
+                    <h4>Abilities</h4>
+                    <div class="abilities">
+                      <span class="ability-badge">Overgrow</span>
+                      <span class="ability-badge">Chlorophyll</span>
+                    </div>
+                  </div>
+                  <button class="flip-button back" onclick="flipCardBack()">Back to Info</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+    <footer>
+      <div id="footer-container">
+        <div id="footer-content">
+          <a href="index.html"
+            ><img
+              src="../assets/img/Fotogram_Logo.svg"
+              alt="Fotogram Logo"
+              class="footer-logo"
+          /></a>
+        </div>
+
+        <div class="impressum-link"><a href="impressum.html">Impressum</a></div>
+        <div class="footer-text"><p>© 2025 Fotogram</p></div>
+      </div>
+    </footer>
   </body>
 </html>

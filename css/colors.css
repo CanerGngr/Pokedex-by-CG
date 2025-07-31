@@ -1,0 +1,66 @@
+/* Pokemon Typ Farben */
+
+/* Hauptfarben für Pokemon Typen */
+:root {
+  --grass-color: #78c850;
+  --grass-dark: #4e7c31;
+  
+  --poison-color: #a040a0;
+  --poison-dark: #682a68;
+  
+  --fire-color: #f08030;
+  --fire-dark: #9c531f;
+  
+  --water-color: #6890f0;
+  --water-dark: #445e9c;
+  
+  --electric-color: #f8d030;
+  --electric-dark: #a1871f;
+  
+  --psychic-color: #f85888;
+  --psychic-dark: #a13959;
+  
+  --ice-color: #98d8d8;
+  --ice-dark: #638d8d;
+  
+  --dragon-color: #7038f8;
+  --dragon-dark: #4924a1;
+  
+  --dark-color: #705848;
+  --dark-dark: #49392f;
+  
+  --fairy-color: #ee99ac;
+  --fairy-dark: #9b6470;
+  
+  --normal-color: #a8a878;
+  --normal-dark: #6d6d4e;
+  
+  --fighting-color: #c03028;
+  --fighting-dark: #7d1f1a;
+  
+  --flying-color: #a890f0;
+  --flying-dark: #6d5acd;
+  
+  --ground-color: #e0c068;
+  --ground-dark: #927d44;
+  
+  --rock-color: #b8a038;
+  --rock-dark: #786824;
+  
+  --bug-color: #a8b820;
+  --bug-dark: #6d7815;
+  
+  --ghost-color: #705898;
+  --ghost-dark: #493963;
+  
+  --steel-color: #b8b8d0;
+  --steel-dark: #787887;
+}
+
+/* Zusätzliche Typ Farben für Stats */
+.stat-hp { background-color: #ff6b6b; }
+.stat-attack { background-color: #ffa726; }
+.stat-defense { background-color: #42a5f5; }
+.stat-speed { background-color: #66bb6a; }
+.stat-special-attack { background-color: #ab47bc; }
+.stat-special-defense { background-color: #26c6da; }
