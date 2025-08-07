@@ -16,17 +16,11 @@ function initializeApp() {
 
 // Initialize page with loading state
 function initializePage() {
-  let container = findContainer();
-  container.innerHTML =
-    createPageHeaderTemplate() +
-    createPokemonGridTemplate() +
-    '<div id="pagination-container" class="text-center mt-4" style="display: none;"></div>';
+  let mainContent = document.getElementById("main-content");
+  mainContent.innerHTML = createMainContainerTemplate();
 }
 
 // Fetch initial Pokemon list from API
-// „Ein Fehler liegt vor: Schon beim Laden der Seite werden 80 Objekte geladen.“
-//
-// „Der Abruf-Link kommt von der Pokémon-API. Man muss dort offset und initialDisplayCount setzen – das Offset beginnt bei 0 und das initialDisplayCount bei 20. Dann erhöht man das initialDisplayCount jedes Mal um 20.“
 
 // Fetch Pokemon from PokeAPI
 async function loadPokemonList() {
@@ -74,7 +68,7 @@ function updateCurrentOffset() {
 
 function addPokemonCard(pokemon) {
   console.log(pokemon);
-  
+
   if (!pokemon) return;
 
   let grid = document.getElementById("pokemon-grid");
@@ -89,19 +83,23 @@ function addPokemonCard(pokemon) {
 // Show more Pokemon - reveal hidden Pokemon first, then load new ones if needed
 function showMorePokemon() {
   if (isLoading) return;
-  
+
   let pokemonGrid = document.getElementById("pokemon-grid");
   let pokemonCards = pokemonGrid.children;
-  
+
   // First, try to reveal hidden Pokemon (up to 20 more)
   let revealedCount = 0;
-  for (let i = currentDisplayCount; i < pokemonData.length && revealedCount < limit; i++) {
+  for (
+    let i = currentDisplayCount;
+    i < pokemonData.length && revealedCount < limit;
+    i++
+  ) {
     if (pokemonCards[i] && pokemonCards[i].style.display === "none") {
       pokemonCards[i].style.display = "block";
       revealedCount++;
     }
   }
-  
+
   if (revealedCount > 0) {
     // We revealed hidden Pokemon, update display count
     currentDisplayCount += revealedCount;
@@ -127,7 +125,6 @@ async function loadMoreData() {
   return detailsList;
 }
 
-
 async function addMorePokemonCard() {
   try {
     const newPokemons = await loadMoreData();
@@ -146,15 +143,17 @@ async function addMorePokemonCard() {
   }
 }
 
-
 // Show less Pokemon (hide last 20 Pokemon cards)
 function showLessPokemon() {
   let pokemonGrid = document.getElementById("pokemon-grid");
   let pokemonCards = pokemonGrid.children;
 
   // Calculate new display count (remove 20, but don't go below initial amount)
-  let newDisplayCount = Math.max(initialDisplayCount, currentDisplayCount - limit);
-  
+  let newDisplayCount = Math.max(
+    initialDisplayCount,
+    currentDisplayCount - limit
+  );
+
   // Hide the last 20 Pokemon cards
   for (let i = newDisplayCount; i < currentDisplayCount; i++) {
     if (pokemonCards[i]) {
@@ -178,17 +177,17 @@ function updatePaginationButton() {
   container.style.display = "block";
 
   let buttonsHTML = "";
-  
+
   // Always show Show More button if there are more Pokemon to fetch from API
   if (currentOffset < totalPokemonCount) {
     buttonsHTML += createShowMoreButtonTemplate();
   }
-  
+
   // Show Show Less button only when currently displaying more than 20 Pokemon
   if (currentDisplayCount > initialDisplayCount) {
     buttonsHTML += " " + createShowLessButtonTemplate();
   }
-  
+
   container.innerHTML = buttonsHTML;
 }
 
@@ -198,10 +197,10 @@ function finalizePokemonLoading() {
   if (leadElements.length > 0) {
     leadElements[0].textContent = "Click on any Pokemon to see details!";
   }
-  
+
   // Set initial display count (all initially loaded Pokemon are visible)
   currentDisplayCount = pokemonData.length;
-  
+
   initializeSearch();
   updatePaginationButton();
 }
@@ -276,7 +275,8 @@ function getPokemonImage(sprites) {
 function formatPokemonTypes(types) {
   let formattedTypes = [];
   for (let i = 0; i < types.length; i++) {
-    let formattedType = types[i].type.name.charAt(0).toUpperCase() + types[i].type.name.slice(1);
+    let formattedType =
+      types[i].type.name.charAt(0).toUpperCase() + types[i].type.name.slice(1);
     formattedTypes.push(formattedType);
   }
   return formattedTypes;
@@ -308,7 +308,9 @@ function formatPokemonStats(stats) {
 function formatPokemonAbilities(abilities) {
   let formattedAbilities = [];
   for (let i = 0; i < abilities.length; i++) {
-    let formattedAbility = abilities[i].ability.name.charAt(0).toUpperCase() + abilities[i].ability.name.slice(1);
+    let formattedAbility =
+      abilities[i].ability.name.charAt(0).toUpperCase() +
+      abilities[i].ability.name.slice(1);
     formattedAbilities.push(formattedAbility);
   }
   return formattedAbilities;

@@ -207,3 +207,12 @@ function createShowMoreButtonTemplate() {
 function createShowLessButtonTemplate() {
   return '<button id="show-less-btn" class="btn btn-outline-secondary btn-lg" onclick="showLessPokemon()">Show Less</button>';
 }
+
+// Template for main container structure
+function createMainContainerTemplate() {
+  return '<div id="main-container" class="container py-4">' +
+         createPageHeaderTemplate() +
+         createPokemonGridTemplate() +
+         '<div id="pagination-container" class="text-center mt-4" style="display: none;"></div>' +
+         '</div>';
+}
