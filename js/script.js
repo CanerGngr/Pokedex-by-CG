@@ -4,28 +4,14 @@
 let pokemonData = [];
 let currentPokemon = null;
 let currentOffset = 0;
-let pokemonPerPage = 50;
 let initialDisplayCount = 20;
-let maxDisplayCount = 50;
 let currentDisplayCount = 20;
 let totalPokemonCount = 0;
 let isLoading = false;
-
+const limit = 20;
 // Initialize app when page loads - function to be called from HTML
 function initializeApp() {
   loadPokemonList();
-}
-
-// Fetch Pokemon from PokeAPI
-async function loadPokemonList() {
-  try {
-    initializePage();
-    let pokemonList = await fetchPokemonListData();
-    await loadAllPokemonDetails(pokemonList);
-    finalizePokemonLoading();
-  } catch (error) {
-    handleLoadingError(error);
-  }
 }
 
 // Initialize page with loading state
@@ -38,23 +24,162 @@ function initializePage() {
 }
 
 // Fetch initial Pokemon list from API
-async function fetchPokemonListData() {
+// „Ein Fehler liegt vor: Schon beim Laden der Seite werden 80 Objekte geladen.“
+//
+// „Der Abruf-Link kommt von der Pokémon-API. Man muss dort offset und initialDisplayCount setzen – das Offset beginnt bei 0 und das initialDisplayCount bei 20. Dann erhöht man das initialDisplayCount jedes Mal um 20.“
+
+// Fetch Pokemon from PokeAPI
+async function loadPokemonList() {
+  try {
+    initializePage();
+    console.log(currentOffset);
+
+    let pokemonList = await fetchPokemonDataToList(currentOffset);
+    await loadAllPokemonDetails(pokemonList);
+    finalizePokemonLoading();
+  } catch (error) {
+    handleLoadingError(error);
+  }
+}
+
+async function fetchPokemonDataToList(currentOffset) {
   let response = await fetch(
-    `https://pokeapi.co/api/v2/pokemon?limit=50&offset=0`
+    `https://pokeapi.co/api/v2/pokemon?limit=${limit}&offset=${currentOffset}`
   );
   let data = await response.json();
   totalPokemonCount = data.count;
+  updateCurrentOffset();
   return data.results;
 }
 
-// Load detailed data for all Pokemon
+// Um Details parallel (schneller) zu laden. Von KI :)
 async function loadAllPokemonDetails(pokemonList) {
+  const detailPromises = [];
   for (let i = 0; i < pokemonList.length; i++) {
-    let pokemon = pokemonList[i];
-    let pokemonDetails = await fetchPokemonDetails(pokemon.url);
-    pokemonData.push(pokemonDetails);
-    addPokemonCard(pokemonDetails);
+    detailPromises.push(fetchPokemonDetails(pokemonList[i].url));
   }
+  const detailsList = await Promise.all(detailPromises);
+
+  detailsList.sort((a, b) => a.id - b.id);
+
+  for (const details of detailsList) {
+    pokemonData.push(details);
+    addPokemonCard(details);
+  }
+}
+
+function updateCurrentOffset() {
+  currentOffset += limit;
+}
+
+function addPokemonCard(pokemon) {
+  console.log(pokemon);
+  
+  if (!pokemon) return;
+
+  let grid = document.getElementById("pokemon-grid");
+  let cardHTML = createPokemonCardHTML(pokemon);
+
+  let cardContainer = document.createElement("div");
+  cardContainer.setAttribute("data-pokemon-id", pokemon.id);
+  cardContainer.innerHTML = cardHTML;
+
+  grid.appendChild(cardContainer);
+}
+// Show more Pokemon - reveal hidden Pokemon first, then load new ones if needed
+function showMorePokemon() {
+  let pokemonGrid = document.getElementById("pokemon-grid");
+  let pokemonCards = pokemonGrid.children;
+  
+  // First, try to reveal hidden Pokemon (up to 20 more)
+  let revealedCount = 0;
+  for (let i = currentDisplayCount; i < pokemonData.length && revealedCount < limit; i++) {
+    if (pokemonCards[i] && pokemonCards[i].style.display === "none") {
+      pokemonCards[i].style.display = "block";
+      revealedCount++;
+    }
+  }
+  
+  if (revealedCount > 0) {
+    // We revealed hidden Pokemon, update display count
+    currentDisplayCount += revealedCount;
+    updatePaginationButton();
+  } else if (currentOffset < totalPokemonCount) {
+    // No hidden Pokemon to reveal, load new ones from API
+    addMorePokemonCard();
+  }
+}
+
+async function loadMoreData() {
+  const pokemonList = await fetchPokemonDataToList(currentOffset);
+  const detailPromises = [];
+  for (let i = 0; i < pokemonList.length; i++) {
+    detailPromises.push(fetchPokemonDetails(pokemonList[i].url));
+  }
+  const detailsList = await Promise.all(detailPromises);
+
+  pokemonData.push(...detailsList);
+
+  return detailsList;
+}
+
+
+async function addMorePokemonCard() {
+  const newPokemons = await loadMoreData();
+
+  for (let i = 0; i < newPokemons.length; i++) {
+    addPokemonCard(newPokemons[i]);
+  }
+
+  // Update display count after adding new cards (all new Pokemon are visible)
+  currentDisplayCount += newPokemons.length;
+  updatePaginationButton();
+}
+
+
+// Show less Pokemon (hide last 20 Pokemon cards)
+function showLessPokemon() {
+  let pokemonGrid = document.getElementById("pokemon-grid");
+  let pokemonCards = pokemonGrid.children;
+
+  // Calculate new display count (remove 20, but don't go below initial amount)
+  let newDisplayCount = Math.max(initialDisplayCount, currentDisplayCount - limit);
+  
+  // Hide the last 20 Pokemon cards
+  for (let i = newDisplayCount; i < currentDisplayCount; i++) {
+    if (pokemonCards[i]) {
+      pokemonCards[i].style.display = "none";
+    }
+  }
+
+  currentDisplayCount = newDisplayCount;
+  updatePaginationButton();
+}
+
+// Update pagination button based on current state
+function updatePaginationButton() {
+  let container = document.getElementById("pagination-container");
+
+  if (pokemonData.length === 0) {
+    container.style.display = "none";
+    return;
+  }
+
+  container.style.display = "block";
+
+  let buttonsHTML = "";
+  
+  // Always show Show More button if there are more Pokemon to fetch from API
+  if (currentOffset < totalPokemonCount) {
+    buttonsHTML += createShowMoreButtonTemplate();
+  }
+  
+  // Show Show Less button only when currently displaying more than 20 Pokemon
+  if (currentDisplayCount > initialDisplayCount) {
+    buttonsHTML += " " + createShowLessButtonTemplate();
+  }
+  
+  container.innerHTML = buttonsHTML;
 }
 
 // Update UI when Pokemon loading is complete
@@ -63,26 +188,12 @@ function finalizePokemonLoading() {
   if (leadElements.length > 0) {
     leadElements[0].textContent = "Click on any Pokemon to see details!";
   }
+  
+  // Set initial display count (all initially loaded Pokemon are visible)
+  currentDisplayCount = pokemonData.length;
+  
   initializeSearch();
   updatePaginationButton();
-}
-
-// Handle errors during Pokemon loading
-function handleLoadingError(error) {
-  console.error("Error loading Pokemon:", error);
-  let container = findContainer();
-  container.innerHTML = createErrorTemplate(
-    "Failed to load Pokemon data. Please try again later."
-  );
-}
-
-// Find the correct container element
-function findContainer() {
-  let container = document.getElementById("main-container");
-  if (!container) {
-    container = document.getElementsByClassName("container")[0];
-  }
-  return container;
 }
 
 // Fetch detailed Pokemon data
@@ -153,9 +264,12 @@ function getPokemonImage(sprites) {
 
 // Format Pokemon types with proper capitalization
 function formatPokemonTypes(types) {
-  return types.map(
-    (type) => type.type.name.charAt(0).toUpperCase() + type.type.name.slice(1)
-  );
+  let formattedTypes = [];
+  for (let i = 0; i < types.length; i++) {
+    let formattedType = types[i].type.name.charAt(0).toUpperCase() + types[i].type.name.slice(1);
+    formattedTypes.push(formattedType);
+  }
+  return formattedTypes;
 }
 
 // Format height in meters
@@ -182,11 +296,12 @@ function formatPokemonStats(stats) {
 
 // Format Pokemon abilities with proper capitalization
 function formatPokemonAbilities(abilities) {
-  return abilities.map(
-    (ability) =>
-      ability.ability.name.charAt(0).toUpperCase() +
-      ability.ability.name.slice(1)
-  );
+  let formattedAbilities = [];
+  for (let i = 0; i < abilities.length; i++) {
+    let formattedAbility = abilities[i].ability.name.charAt(0).toUpperCase() + abilities[i].ability.name.slice(1);
+    formattedAbilities.push(formattedAbility);
+  }
+  return formattedAbilities;
 }
 
 // Get generation based on Pokemon ID
@@ -203,23 +318,6 @@ function getGeneration(id) {
 }
 
 // Add Pokemon card to grid
-function addPokemonCard(pokemon) {
-  if (!pokemon) return;
-
-  let grid = document.getElementById("pokemon-grid");
-  let cardHTML = createPokemonCardHTML(pokemon);
-
-  let cardContainer = document.createElement("div");
-  cardContainer.setAttribute("data-pokemon-id", pokemon.id);
-  cardContainer.innerHTML = cardHTML;
-
-  // Hide cards beyond initial display count
-  if (pokemonData.length > initialDisplayCount) {
-    cardContainer.style.display = "none";
-  }
-
-  grid.appendChild(cardContainer);
-}
 
 // Close modal with Escape key
 document.onkeydown = function (event) {
@@ -280,11 +378,11 @@ function closeModal() {
 function flipCard() {
   let cardInnerElements = document.getElementsByClassName("card-inner");
   let cardInner = cardInnerElements[0];
-  
+
   hideArrowsWithTransition();
   cardInner.classList.add("flipped");
-  
-  setTimeout(function() {
+
+  setTimeout(function () {
     showArrowsWithTransition();
   }, 800);
 }
@@ -293,67 +391,17 @@ function flipCard() {
 function flipCardBack() {
   let cardInnerElements = document.getElementsByClassName("card-inner");
   let cardInner = cardInnerElements[0];
-  
+
   hideArrowsWithTransition();
   cardInner.classList.remove("flipped");
-  
-  setTimeout(function() {
+
+  setTimeout(function () {
     showArrowsWithTransition();
   }, 800);
 }
 
-// Show more Pokemon (reveal hidden cards)
-function showMorePokemon() {
-  let pokemonGrid = document.getElementById("pokemon-grid");
-  let pokemonCards = pokemonGrid.children;
-
-  for (
-    let i = initialDisplayCount;
-    i < maxDisplayCount && i < pokemonCards.length;
-    i++
-  ) {
-    pokemonCards[i].style.display = "block";
-  }
-
-  currentDisplayCount = maxDisplayCount;
-  updatePaginationButton();
-}
-
-// Show less Pokemon (hide cards 21-50, show only first 20)
-function showLessPokemon() {
-  let pokemonGrid = document.getElementById("pokemon-grid");
-  let pokemonCards = pokemonGrid.children;
-
-  for (let i = initialDisplayCount; i < pokemonCards.length; i++) {
-    pokemonCards[i].style.display = "none";
-  }
-
-  currentDisplayCount = initialDisplayCount;
-  updatePaginationButton();
-}
-
 // Update pagination button based on current state
-function updatePaginationButton() {
-  let container = document.getElementById("pagination-container");
-
-  if (pokemonData.length === 0) {
-    container.style.display = "none";
-    return;
-  }
-
-  container.style.display = "block";
-
-  if (
-    currentDisplayCount === initialDisplayCount &&
-    pokemonData.length > initialDisplayCount
-  ) {
-    container.innerHTML = createShowMoreButtonTemplate();
-  } else if (currentDisplayCount === maxDisplayCount) {
-    container.innerHTML = createShowLessButtonTemplate();
-  } else {
-    container.style.display = "none";
-  }
-}
+// w_latter
 
 // Navigate to previous Pokemon in modal
 function navigateToPreviousPokemon() {
@@ -438,4 +486,22 @@ function showArrowsWithTransition() {
     rightArrow.classList.remove("arrow-fade-out");
     rightArrow.classList.add("arrow-fade-in");
   }
+}
+
+// Handle errors during Pokemon loading
+function handleLoadingError(error) {
+  console.error("Error loading Pokemon:", error);
+  let container = findContainer();
+  container.innerHTML = createErrorTemplate(
+    "Failed to load Pokemon data. Please try again later."
+  );
+}
+
+// Find the correct container element
+function findContainer() {
+  let container = document.getElementById("main-container");
+  if (!container) {
+    container = document.getElementsByClassName("container")[0];
+  }
+  return container;
 }
