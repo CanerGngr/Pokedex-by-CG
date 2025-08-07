@@ -25,16 +25,32 @@ function createPokemonGridTemplate() {
 
 // Template for creating Pokemon card HTML
 function createPokemonCardHTML(pokemon) {
-  let typeClasses = pokemon.types.map(type => type.toLowerCase()).join(' ');
-  let pokemonId = pokemon.id.toString().padStart(3, '0');
-  
-  let typeBadges = '';
+  let typeClasses = '';
   for (let i = 0; i < pokemon.types.length; i++) {
-    typeBadges += '<span class="type-badge ' + pokemon.types[i].toLowerCase() + '">' +
-                  '<span class="type-icon ' + pokemon.types[i].toLowerCase() + '"></span>' +
-                  pokemon.types[i] + '</span>';
+    typeClasses += pokemon.types[i].toLowerCase();
+    if (i < pokemon.types.length - 1) {
+      typeClasses += ' ';
+    }
   }
+  let pokemonId = pokemon.id.toString().padStart(3, '0');
+  let typeBadges = createTypeBadgesHTML(pokemon.types);
   
+  return createPokemonCardStructure(pokemon, typeClasses, pokemonId, typeBadges);
+}
+
+// Create HTML for Pokemon type badges
+function createTypeBadgesHTML(types) {
+  let typeBadges = '';
+  for (let i = 0; i < types.length; i++) {
+    typeBadges += '<span class="type-badge ' + types[i].toLowerCase() + '">' +
+                  '<span class="type-icon ' + types[i].toLowerCase() + '"></span>' +
+                  types[i] + '</span>';
+  }
+  return typeBadges;
+}
+
+// Create complete Pokemon card structure HTML
+function createPokemonCardStructure(pokemon, typeClasses, pokemonId, typeBadges) {
   return '<div class="pokemon-card ' + typeClasses + '" data-pokemon-id="' + pokemon.id + '" onclick="openModal(' + pokemon.id + ')">' +
          '<div class="pokemon-card-content">' +
          '<div class="pokemon-image-container">' +
@@ -63,16 +79,7 @@ function createSearchBarTemplate() {
   return '<div class="search-container mb-4">' +
          '<div class="row justify-content-center">' +
          '<div class="col-md-6">' +
-         '<div class="input-group">' +
-         '<span class="input-group-text">' +
-         '<svg width="16" height="16" fill="currentColor" class="bi bi-search" viewBox="0 0 16 16">' +
-         '<path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z"/>' +
-         '</svg>' +
-         '</span>' +
-         '<input type="text" class="form-control" id="pokemon-search-input" placeholder="Search by name, ID, or type (e.g., \'pika\', \'25\', \'fire\', \'grass\')..." oninput="handleSearchInput()">' +
-         '<button class="btn btn-primary" type="button" id="search-button" onclick="performButtonSearch()" disabled>Search</button>' +
-         '<button class="btn btn-outline-secondary" type="button" onclick="clearSearch()">Clear</button>' +
-         '</div>' +
+         createSearchInputGroup() +
          '<div class="text-center mt-2">' +
          '<small id="search-results-count" class="text-muted"></small>' +
          '</div>' +
@@ -81,12 +88,38 @@ function createSearchBarTemplate() {
          '</div>';
 }
 
+// Create search input group with icon and buttons
+function createSearchInputGroup() {
+  return '<div class="input-group">' +
+         createSearchIcon() +
+         '<input type="text" class="form-control" id="pokemon-search-input" placeholder="Search by name, ID, or type (e.g., \'pika\', \'25\', \'fire\', \'grass\')..." oninput="handleSearchInput()">' +
+         '<button class="btn btn-primary" type="button" id="search-button" onclick="performButtonSearch()" disabled>Search</button>' +
+         '<button class="btn btn-outline-secondary" type="button" onclick="clearSearch()">Clear</button>' +
+         '</div>';
+}
+
+// Create search icon HTML
+function createSearchIcon() {
+  return '<span class="input-group-text">' +
+         '<svg width="16" height="16" fill="currentColor" class="bi bi-search" viewBox="0 0 16 16">' +
+         '<path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z"/>' +
+         '</svg>' +
+         '</span>';
+}
+
 // Template for modal overlay structure
 function createModalOverlayTemplate() {
   return '<div id="pokemon-modal" class="pokemon-modal" onclick="closeModal()">' +
          '<div class="modal-content" onclick="event.stopPropagation()">' +
          '<div class="modal-close" onclick="closeModal()">&times;</div>' +
-         '<div class="pokemon-card-detailed">' +
+         createModalCardContainer() +
+         '</div>' +
+         '</div>';
+}
+
+// Create modal card container with navigation
+function createModalCardContainer() {
+  return '<div class="pokemon-card-detailed">' +
          '<div class="modal-nav-arrow modal-nav-left" id="modal-nav-left" onclick="navigateToPreviousPokemon()">' +
          '<img src="../assets/icons/arrow-left.svg" alt="Previous" width="24" height="24">' +
          '</div>' +
@@ -95,51 +128,64 @@ function createModalOverlayTemplate() {
          '</div>' +
          '<div class="card-inner" id="modal-card-inner">' +
          '</div>' +
-         '</div>' +
-         '</div>' +
          '</div>';
 }
 
 // Template for modal front side with Pokemon details
 function createModalFrontSideTemplate(pokemon) {
   let pokemonId = pokemon.id.toString().padStart(3, '0');
-  let typeBadges = '';
-  for (let i = 0; i < pokemon.types.length; i++) {
-    typeBadges += '<span class="type-badge ' + pokemon.types[i].toLowerCase() + '">' +
-                  '<span class="type-icon ' + pokemon.types[i].toLowerCase() + '"></span>' +
-                  pokemon.types[i] + '</span>';
-  }
+  let typeBadges = createModalTypeBadgesHTML(pokemon.types);
   
+  return createModalFrontCardStructure(pokemon, pokemonId, typeBadges);
+}
+
+// Create type badges HTML for modal
+function createModalTypeBadgesHTML(types) {
+  let typeBadges = '';
+  for (let i = 0; i < types.length; i++) {
+    typeBadges += '<span class="type-badge ' + types[i].toLowerCase() + '">' +
+                  '<span class="type-icon ' + types[i].toLowerCase() + '"></span>' +
+                  types[i] + '</span>';
+  }
+  return typeBadges;
+}
+
+// Create modal front card structure HTML
+function createModalFrontCardStructure(pokemon, pokemonId, typeBadges) {
   return '<div class="card-front ' + pokemon.types[0].toLowerCase() + '">' +
          '<div class="detailed-image-container">' +
          '<img id="modal-pokemon-image" src="' + pokemon.image + '" alt="' + pokemon.name + '" class="detailed-pokemon-image">' +
          '</div>' +
-         '<div class="detailed-info">' +
+         createModalDetailedInfo(pokemon, pokemonId, typeBadges) +
+         '</div>';
+}
+
+// Create detailed info section for modal
+function createModalDetailedInfo(pokemon, pokemonId, typeBadges) {
+  return '<div class="detailed-info">' +
          '<h2 id="modal-pokemon-name">' + pokemon.name + '</h2>' +
          '<span id="modal-pokemon-id">#' + pokemonId + '</span>' +
          '<div id="modal-pokemon-types" class="pokemon-types">' + typeBadges + '</div>' +
          '<p id="modal-pokemon-description" class="pokemon-description">' + pokemon.description + '</p>' +
          createPokemonDetailsTemplate(pokemon) +
          '<button class="flip-button" onclick="flipCard()">View Stats</button>' +
-         '</div>' +
          '</div>';
 }
 
 // Template for Pokemon details section
 function createPokemonDetailsTemplate(pokemon) {
   return '<div class="pokemon-details">' +
-         '<div class="detail-item">' +
-         '<span class="detail-label">Height:</span>' +
-         '<span id="modal-pokemon-height">' + pokemon.height + '</span>' +
-         '</div>' +
-         '<div class="detail-item">' +
-         '<span class="detail-label">Weight:</span>' +
-         '<span id="modal-pokemon-weight">' + pokemon.weight + '</span>' +
-         '</div>' +
-         '<div class="detail-item">' +
-         '<span class="detail-label">Generation:</span>' +
-         '<span id="modal-pokemon-generation">' + pokemon.generation + '</span>' +
-         '</div>' +
+         createDetailItem('Height:', 'modal-pokemon-height', pokemon.height) +
+         createDetailItem('Weight:', 'modal-pokemon-weight', pokemon.weight) +
+         createDetailItem('Generation:', 'modal-pokemon-generation', pokemon.generation) +
+         '</div>';
+}
+
+// Create individual detail item HTML
+function createDetailItem(label, id, value) {
+  return '<div class="detail-item">' +
+         '<span class="detail-label">' + label + '</span>' +
+         '<span id="' + id + '">' + value + '</span>' +
          '</div>';
 }
 
@@ -157,14 +203,24 @@ function createModalBackSideTemplate(pokemon) {
 
 // Template for all Pokemon stats including total
 function createAllStatsTemplate(stats) {
-  let total = stats.hp + stats.attack + stats.defense + stats.specialAttack + stats.specialDefense + stats.speed;
+  let total = calculateStatsTotal(stats);
+  return createBasicStatsTemplate(stats) +
+         createStatItemTemplate('Total', total, 'total-stats');
+}
+
+// Calculate total stats value
+function calculateStatsTotal(stats) {
+  return stats.hp + stats.attack + stats.defense + stats.specialAttack + stats.specialDefense + stats.speed;
+}
+
+// Create basic stats template (excluding total)
+function createBasicStatsTemplate(stats) {
   return createStatItemTemplate('HP', stats.hp) +
          createStatItemTemplate('Attack', stats.attack) +
          createStatItemTemplate('Defense', stats.defense) +
          createStatItemTemplate('Sp. Att', stats.specialAttack) +
          createStatItemTemplate('Sp. Def', stats.specialDefense) +
-         createStatItemTemplate('Speed', stats.speed) +
-         createStatItemTemplate('Total', total, 'total-stats');
+         createStatItemTemplate('Speed', stats.speed);
 }
 
 // Template for individual stat item
@@ -174,6 +230,11 @@ function createStatItemTemplate(statName, statValue, extraClass) {
   let cssClass = statName.toLowerCase().replace('.', '').replace(' ', '-');
   let itemClass = extraClass ? 'stat-item ' + extraClass : 'stat-item';
   
+  return buildStatItemHTML(itemClass, statName, cssClass, percentage, statValue);
+}
+
+// Build stat item HTML structure
+function buildStatItemHTML(itemClass, statName, cssClass, percentage, statValue) {
   return '<div class="' + itemClass + '">' +
          '<span class="stat-name">' + statName + '</span>' +
          '<div class="stat-bar">' +

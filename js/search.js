@@ -14,18 +14,30 @@ function initializeSearch() {
 
 // Handle search input changes
 function handleSearchInput() {
+  updateSearchQuery();
+  updateSearchButtonState();
+  handleLiveSearch();
+}
+
+// Update global search query from input field
+function updateSearchQuery() {
   let searchInput = document.getElementById('pokemon-search-input');
   searchQuery = searchInput.value.toLowerCase().trim();
+}
+
+// Enable/disable search button based on input length
+function updateSearchButtonState() {
   let searchButton = document.getElementById('search-button');
   
-  // Enable/disable search button based on 3-character minimum
   if (searchQuery.length >= 3) {
     searchButton.disabled = false;
   } else {
     searchButton.disabled = true;
   }
-  
-  // Still perform live search for immediate feedback
+}
+
+// Perform live search based on current input
+function handleLiveSearch() {
   if (searchQuery.length === 0) {
     showAllPokemon();
     return;
@@ -134,11 +146,15 @@ function updateSearchResultsCount() {
   if (countElement) {
     let totalPokemon = pokemonData.length;
     let visiblePokemon = searchQuery.length === 0 ? totalPokemon : searchResults.length;
-    
-    if (searchQuery.length === 0) {
-      countElement.textContent = 'Showing all ' + totalPokemon + ' Pokemon';
-    } else {
-      countElement.textContent = 'Found ' + visiblePokemon + ' of ' + totalPokemon + ' Pokemon';
-    }
+    countElement.textContent = buildSearchCountText(visiblePokemon, totalPokemon);
+  }
+}
+
+// Build search count text based on search state
+function buildSearchCountText(visiblePokemon, totalPokemon) {
+  if (searchQuery.length === 0) {
+    return 'Showing all ' + totalPokemon + ' Pokemon';
+  } else {
+    return 'Found ' + visiblePokemon + ' of ' + totalPokemon + ' Pokemon';
   }
 }
