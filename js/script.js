@@ -88,6 +88,8 @@ function addPokemonCard(pokemon) {
 }
 // Show more Pokemon - reveal hidden Pokemon first, then load new ones if needed
 function showMorePokemon() {
+  if (isLoading) return;
+  
   let pokemonGrid = document.getElementById("pokemon-grid");
   let pokemonCards = pokemonGrid.children;
   
@@ -106,6 +108,8 @@ function showMorePokemon() {
     updatePaginationButton();
   } else if (currentOffset < totalPokemonCount) {
     // No hidden Pokemon to reveal, load new ones from API
+    isLoading = true;
+    showLoadingScreen();
     addMorePokemonCard();
   }
 }
@@ -125,15 +129,21 @@ async function loadMoreData() {
 
 
 async function addMorePokemonCard() {
-  const newPokemons = await loadMoreData();
+  try {
+    const newPokemons = await loadMoreData();
 
-  for (let i = 0; i < newPokemons.length; i++) {
-    addPokemonCard(newPokemons[i]);
+    for (let i = 0; i < newPokemons.length; i++) {
+      addPokemonCard(newPokemons[i]);
+    }
+
+    // Update display count after adding new cards (all new Pokemon are visible)
+    currentDisplayCount += newPokemons.length;
+  } catch (error) {
+    console.error("Error loading more Pokemon:", error);
+  } finally {
+    isLoading = false;
+    hideLoadingScreen();
   }
-
-  // Update display count after adding new cards (all new Pokemon are visible)
-  currentDisplayCount += newPokemons.length;
-  updatePaginationButton();
 }
 
 
@@ -495,6 +505,18 @@ function handleLoadingError(error) {
   container.innerHTML = createErrorTemplate(
     "Failed to load Pokemon data. Please try again later."
   );
+}
+
+// Show loading screen in pagination container
+function showLoadingScreen() {
+  let container = document.getElementById("pagination-container");
+  container.innerHTML = createLoadingTemplate();
+  container.style.display = "block";
+}
+
+// Hide loading screen and restore pagination buttons
+function hideLoadingScreen() {
+  updatePaginationButton();
 }
 
 // Find the correct container element
