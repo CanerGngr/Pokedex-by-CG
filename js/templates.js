@@ -81,6 +81,7 @@ function createSearchBarTemplate() {
          '<div class="col-md-6">' +
          createSearchInputGroup() +
          '<div class="text-center mt-2">' +
+         '<small id="search-message" class="text-warning d-none"></small>' +
          '<small id="search-results-count" class="text-muted"></small>' +
          '</div>' +
          '</div>' +
@@ -93,7 +94,6 @@ function createSearchInputGroup() {
   return '<div class="input-group">' +
          createSearchIcon() +
          '<input type="text" class="form-control" id="pokemon-search-input" placeholder="Search by name, ID, or type (e.g., \'pika\', \'25\', \'fire\', \'grass\')..." oninput="handleSearchInput()">' +
-         '<button class="btn btn-primary" type="button" id="search-button" onclick="performButtonSearch()" disabled>Search</button>' +
          '<button class="btn btn-outline-secondary" type="button" onclick="clearSearch()">Clear</button>' +
          '</div>';
 }

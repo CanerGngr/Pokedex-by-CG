@@ -90,7 +90,7 @@ function updatePaginationButton() {
 
 // Check if pagination container should be hidden
 function shouldHidePaginationContainer() {
-  return pokemonData.length === 0;
+  return pokemonData.length === 0 || (searchQuery && searchQuery.length >= 3);
 }
 
 // Build HTML for pagination buttons based on current state

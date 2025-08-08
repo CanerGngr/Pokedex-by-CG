@@ -68,6 +68,7 @@ async function addMorePokemonCard() {
     const newPokemons = await loadMoreData();
     displayNewPokemonCards(newPokemons);
     currentDisplayCount += newPokemons.length;
+    updateSearchResultsCount();
   } catch (error) {
     console.error("Error loading more Pokemon:", error);
   } finally {

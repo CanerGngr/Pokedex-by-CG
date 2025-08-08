@@ -2,12 +2,12 @@
 // This file can be shared and integrated into any Pokemon project
 
 // Global search state
-let searchQuery = '';
+let searchQuery = "";
 let searchResults = [];
 
 // Initialize search functionality
 function initializeSearch() {
-  searchQuery = '';
+  searchQuery = "";
   searchResults = [];
   updateSearchResultsCount();
 }
@@ -15,44 +15,38 @@ function initializeSearch() {
 // Handle search input changes
 function handleSearchInput() {
   updateSearchQuery();
-  updateSearchButtonState();
   handleLiveSearch();
 }
 
 // Update global search query from input field
 function updateSearchQuery() {
-  let searchInput = document.getElementById('pokemon-search-input');
+  let searchInput = document.getElementById("pokemon-search-input");
   searchQuery = searchInput.value.toLowerCase().trim();
 }
 
-// Enable/disable search button based on input length
-function updateSearchButtonState() {
-  let searchButton = document.getElementById('search-button');
-  
-  if (searchQuery.length >= 3) {
-    searchButton.disabled = false;
-  } else {
-    searchButton.disabled = true;
-  }
-}
 
 // Perform live search based on current input
 function handleLiveSearch() {
   if (searchQuery.length === 0) {
+    hideSearchMessage();
     showAllPokemon();
     return;
   }
-  
-  if (searchQuery.length >= 1) {
+
+  if (searchQuery.length >= 3) {
+    hideSearchMessage();
     performSearch(searchQuery);
+  } else {
+    showSearchMessage("Please enter at least 3 characters or numbers");
+    showAllPokemon();
   }
 }
 
 // Perform search when button is clicked (requires 3+ characters)
 function performButtonSearch() {
-  let searchInput = document.getElementById('pokemon-search-input');
+  let searchInput = document.getElementById("pokemon-search-input");
   searchQuery = searchInput.value.toLowerCase().trim();
-  
+
   if (searchQuery.length >= 3) {
     performSearch(searchQuery);
   }
@@ -61,16 +55,16 @@ function performButtonSearch() {
 // Core search logic coordinator
 function performSearch(query) {
   searchResults = [];
-  
+
   for (let i = 0; i < pokemonData.length; i++) {
     let pokemon = pokemonData[i];
     let matchFound = checkPokemonMatch(pokemon, query);
-    
+
     if (matchFound) {
       searchResults.push(pokemon);
     }
   }
-  
+
   filterPokemonCards(searchResults);
 }
 
@@ -80,13 +74,13 @@ function checkPokemonMatch(pokemon, query) {
   if (pokemon.name.toLowerCase().includes(query)) {
     return true;
   }
-  
+
   // Search by ID (exact or partial number matching)
   let pokemonIdString = pokemon.id.toString();
   if (pokemonIdString.includes(query)) {
     return true;
   }
-  
+
   // Search by type
   return checkTypeMatch(pokemon.types, query);
 }
@@ -103,26 +97,31 @@ function checkTypeMatch(types, query) {
 
 // Show/hide cards based on search results
 function filterPokemonCards(filteredData) {
-  let grid = document.getElementById('pokemon-grid');
-  
+  let grid = document.getElementById("pokemon-grid");
+
   // Clear the grid completely
-  grid.innerHTML = '';
-  
+  grid.innerHTML = "";
+
   // Add only the filtered Pokemon cards back to the grid
   for (let i = 0; i < filteredData.length; i++) {
     createAndAppendCard(filteredData[i], grid);
   }
-  
+
+  // Hide pagination when showing search results
+  if (searchQuery.length >= 3) {
+    hidePaginationContainer();
+  }
+
   updateSearchResultsCount();
 }
 
 // Create and append a single Pokemon card
 function createAndAppendCard(pokemon, grid) {
   let cardHTML = createPokemonCardHTML(pokemon);
-  
-  let cardContainer = document.createElement('div');
+
+  let cardContainer = document.createElement("div");
   cardContainer.innerHTML = cardHTML;
-  
+
   grid.appendChild(cardContainer);
 }
 
@@ -130,31 +129,75 @@ function createAndAppendCard(pokemon, grid) {
 function showAllPokemon() {
   searchResults = pokemonData.slice();
   filterPokemonCards(searchResults);
+  
+  // Show pagination when not searching
+  if (searchQuery.length === 0) {
+    updatePaginationButton();
+  }
 }
 
 // Clear search and show all Pokemon
 function clearSearch() {
-  let searchInput = document.getElementById('pokemon-search-input');
-  searchInput.value = '';
-  searchQuery = '';
+  let searchInput = document.getElementById("pokemon-search-input");
+  searchInput.value = "";
+  searchQuery = "";
   showAllPokemon();
 }
 
 // Update search results count display
 function updateSearchResultsCount() {
-  let countElement = document.getElementById('search-results-count');
+  let countElement = document.getElementById("search-results-count");
   if (countElement) {
     let totalPokemon = pokemonData.length;
-    let visiblePokemon = searchQuery.length === 0 ? totalPokemon : searchResults.length;
-    countElement.textContent = buildSearchCountText(visiblePokemon, totalPokemon);
+    let visiblePokemon =
+      searchQuery.length === 0 ? totalPokemon : searchResults.length;
+    countElement.textContent = buildSearchCountText(
+      visiblePokemon,
+      totalPokemon
+    );
   }
 }
 
 // Build search count text based on search state
 function buildSearchCountText(visiblePokemon, totalPokemon) {
   if (searchQuery.length === 0) {
-    return 'Showing all ' + totalPokemon + ' Pokemon';
+    return "Showing all " + totalPokemon + " Pokemon";
   } else {
-    return 'Found ' + visiblePokemon + ' of ' + totalPokemon + ' Pokemon';
+    return "Found " + visiblePokemon + " of " + totalPokemon + " Pokemon";
+  }
+}
+
+// Show search message for minimum character requirement
+function showSearchMessage(message) {
+  let messageElement = document.getElementById("search-message");
+  if (messageElement) {
+    messageElement.textContent = message;
+    messageElement.classList.remove("d-none");
+    messageElement.classList.add("d-block");
+  }
+}
+
+// Hide search message
+function hideSearchMessage() {
+  let messageElement = document.getElementById("search-message");
+  if (messageElement) {
+    messageElement.classList.remove("d-block");
+    messageElement.classList.add("d-none");
+  }
+}
+
+// Hide pagination container during search
+function hidePaginationContainer() {
+  let container = document.getElementById("pagination-container");
+  if (container) {
+    container.style.display = "none";
+  }
+}
+
+// Show pagination container when not searching
+function showPaginationContainer() {
+  let container = document.getElementById("pagination-container");
+  if (container) {
+    container.style.display = "block";
   }
 }
