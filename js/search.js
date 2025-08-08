@@ -24,7 +24,6 @@ function updateSearchQuery() {
   searchQuery = searchInput.value.toLowerCase().trim();
 }
 
-
 // Perform live search based on current input
 function handleLiveSearch() {
   if (searchQuery.length === 0) {
@@ -129,7 +128,7 @@ function createAndAppendCard(pokemon, grid) {
 function showAllPokemon() {
   searchResults = pokemonData.slice();
   filterPokemonCards(searchResults);
-  
+
   // Show pagination when not searching
   if (searchQuery.length === 0) {
     updatePaginationButton();
