@@ -82,7 +82,7 @@ function checkForLoadMoreMessage() {
   if (!shouldShowLoadMoreMessage()) {
     return;
   }
-  
+
   let isNumeric = /^\d+$/.test(searchQuery);
   if (isNumeric) {
     handleNumericSearchMessage();
@@ -97,12 +97,12 @@ function shouldShowLoadMoreMessage() {
     hideLoadMoreMessage();
     return false;
   }
-  
+
   if (pokemonData.length >= totalPokemonCount) {
     hideLoadMoreMessage();
     return false;
   }
-  
+
   return true;
 }
 
@@ -110,7 +110,7 @@ function shouldShowLoadMoreMessage() {
 function handleNumericSearchMessage() {
   let searchedId = parseInt(searchQuery);
   let highestLoadedId = pokemonData.length;
-  
+
   if (searchedId > highestLoadedId) {
     showLoadMoreMessage(
       `Pokemon #${searchQuery} might be available. Load more Pokemon to search!`
