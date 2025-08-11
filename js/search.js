@@ -28,6 +28,7 @@ function updateSearchQuery() {
 function handleLiveSearch() {
   if (searchQuery.length === 0) {
     hideSearchMessage();
+    hideLoadMoreMessage();
     showAllPokemon();
     return;
   }
@@ -73,12 +74,63 @@ function performSearch(query) {
   }
 
   filterPokemonCards(searchResults);
+  checkForLoadMoreMessage();
+}
+
+// Check if enough Pokemon are loaded to search
+function checkForLoadMoreMessage() {
+  if (!shouldShowLoadMoreMessage()) {
+    return;
+  }
+  
+  let isNumeric = /^\d+$/.test(searchQuery);
+  if (isNumeric) {
+    handleNumericSearchMessage();
+  } else {
+    handleTextSearchMessage();
+  }
+}
+
+// Check if load more message should be shown
+function shouldShowLoadMoreMessage() {
+  if (searchResults.length > 0) {
+    hideLoadMoreMessage();
+    return false;
+  }
+  
+  if (pokemonData.length >= totalPokemonCount) {
+    hideLoadMoreMessage();
+    return false;
+  }
+  
+  return true;
+}
+
+// Handle message for numeric Pokemon ID searches
+function handleNumericSearchMessage() {
+  let searchedId = parseInt(searchQuery);
+  let highestLoadedId = pokemonData.length;
+  
+  if (searchedId > highestLoadedId) {
+    showLoadMoreMessage(
+      `Pokemon #${searchQuery} might be available. Load more Pokemon to search!`
+    );
+  } else {
+    hideLoadMoreMessage();
+  }
+}
+
+// Handle message for text-based Pokemon searches
+function handleTextSearchMessage() {
+  showLoadMoreMessage(
+    `No results for "${searchQuery}". Try loading more Pokemon - there might be a match!`
+  );
 }
 
 // Auto-pad numeric queries for better ID matching
 function padNumericQuery(query) {
   if (/^\d+$/.test(query) && query.length <= 3) {
-    return query.padStart(3, '0');
+    return query.padStart(3, "0");
   }
   return query;
 }
@@ -102,20 +154,20 @@ function checkPokemonMatch(pokemon, query) {
 // Enhanced ID matching with exact and partial matching
 function checkIdMatch(pokemonId, query) {
   let pokemonIdString = pokemonId.toString();
-  
+
   // Check if query is numeric
   if (/^\d+$/.test(query)) {
     // Exact match for numeric queries
     if (pokemonIdString === query) {
       return true;
     }
-    
+
     // Try with auto-padded query (e.g., "50" becomes "050")
     let paddedQuery = padNumericQuery(query);
     if (pokemonIdString === paddedQuery) {
       return true;
     }
-    
+
     // Partial match (for cases like "5" matching 15, 25, etc.)
     if (pokemonIdString.includes(query)) {
       return true;
@@ -126,7 +178,7 @@ function checkIdMatch(pokemonId, query) {
       return true;
     }
   }
-  
+
   return false;
 }
 
@@ -181,6 +233,7 @@ function showAllPokemon() {
   if (searchQuery.length === 0) {
     updatePaginationButton();
   }
+  hideLoadMoreMessage();
 }
 
 // Clear search and show all Pokemon
@@ -227,6 +280,25 @@ function showSearchMessage(message) {
 // Hide search message
 function hideSearchMessage() {
   let messageElement = document.getElementById("search-message");
+  if (messageElement) {
+    messageElement.classList.remove("d-block");
+    messageElement.classList.add("d-none");
+  }
+}
+
+// Show message when not enough Pokemon Card loaded for the search
+function showLoadMoreMessage(message) {
+  let messageElement = document.getElementById("load-more-message");
+  if (messageElement) {
+    messageElement.textContent = message;
+    messageElement.classList.remove("d-none");
+    messageElement.classList.add("d-block");
+  }
+}
+
+// Hide loadMore message
+function hideLoadMoreMessage() {
+  let messageElement = document.getElementById("load-more-message");
   if (messageElement) {
     messageElement.classList.remove("d-block");
     messageElement.classList.add("d-none");

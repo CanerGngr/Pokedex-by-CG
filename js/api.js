@@ -65,10 +65,12 @@ async function loadMoreData() {
 
 async function addMorePokemonCard() {
   try {
+    let scrollStartIndex = currentDisplayCount;
     const newPokemons = await loadMoreData();
     displayNewPokemonCards(newPokemons);
     currentDisplayCount += newPokemons.length;
     updateSearchResultsCount();
+    scrollToNewCards(scrollStartIndex);
   } catch (error) {
     console.error("Error loading more Pokemon:", error);
   } finally {

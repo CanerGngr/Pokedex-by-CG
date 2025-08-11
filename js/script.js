@@ -28,4 +28,3 @@ document.onkeydown = function (event) {
     closeModal();
   }
 };
-

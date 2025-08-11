@@ -5,7 +5,7 @@ function showMorePokemon() {
   if (isLoading) return;
 
   let revealedCount = revealHiddenPokemon();
-  
+
   if (revealedCount > 0) {
     handleRevealedPokemon(revealedCount);
   } else if (currentOffset < totalPokemonCount) {
@@ -23,7 +23,7 @@ function revealHiddenPokemon() {
 // Process hidden cards and reveal them
 function processHiddenCards(pokemonCards) {
   let revealedCount = 0;
-  
+
   for (
     let i = currentDisplayCount;
     i < pokemonData.length && revealedCount < limit;
@@ -39,8 +39,10 @@ function processHiddenCards(pokemonCards) {
 
 // Handle successfully revealed Pokemon
 function handleRevealedPokemon(revealedCount) {
+  let scrollStartIndex = currentDisplayCount;
   currentDisplayCount += revealedCount;
   updatePaginationButton();
+  scrollToNewCards(scrollStartIndex);
 }
 
 // Load new Pokemon from API when no hidden Pokemon available
@@ -55,7 +57,7 @@ function showLessPokemon() {
   let pokemonGrid = document.getElementById("pokemon-grid");
   let pokemonCards = pokemonGrid.children;
   let newDisplayCount = calculateNewDisplayCount();
-  
+
   hideCardsFromIndex(pokemonCards, newDisplayCount);
   currentDisplayCount = newDisplayCount;
   updatePaginationButton();
@@ -78,12 +80,12 @@ function hideCardsFromIndex(pokemonCards, newDisplayCount) {
 // Update pagination button based on current state
 function updatePaginationButton() {
   let container = document.getElementById("pagination-container");
-  
+
   if (shouldHidePaginationContainer()) {
     container.style.display = "none";
     return;
   }
-  
+
   container.style.display = "block";
   container.innerHTML = buildPaginationButtonsHTML();
 }
@@ -96,14 +98,30 @@ function shouldHidePaginationContainer() {
 // Build HTML for pagination buttons based on current state
 function buildPaginationButtonsHTML() {
   let buttonsHTML = "";
-  
+
   if (currentOffset < totalPokemonCount) {
     buttonsHTML += createShowMoreButtonTemplate();
   }
-  
+
   if (currentDisplayCount > initialDisplayCount) {
     buttonsHTML += " " + createShowLessButtonTemplate();
   }
-  
+
   return buttonsHTML;
+}
+
+// Scroll to newly revealed Pokemon cards with smooth animation
+function scrollToNewCards(startIndex) {
+  let paginationContainer = document.getElementById("pagination-container");
+
+  if (paginationContainer) {
+    let containerRect = paginationContainer.getBoundingClientRect();
+    let currentScrollY = window.pageYOffset;
+    let targetY = currentScrollY + containerRect.top - 50;
+
+    window.scrollTo({
+      top: targetY,
+      behavior: "smooth",
+    });
+  }
 }
