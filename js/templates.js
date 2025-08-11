@@ -1,6 +1,3 @@
-// Pokemon HTML Template Functions
-
-// Template for creating a loading message
 function createLoadingTemplate() {
   return (
     '<div id="loading-message" class="text-center p-4">' +
@@ -12,7 +9,6 @@ function createLoadingTemplate() {
   );
 }
 
-// Template for creating an error message
 function createErrorTemplate(message) {
   return (
     '<div class="alert alert-danger text-center" role="alert">' +
@@ -22,12 +18,10 @@ function createErrorTemplate(message) {
   );
 }
 
-// Template for creating Pokemon card grid container
 function createPokemonGridTemplate() {
   return '<div id="pokemon-grid">' + "</div>";
 }
 
-// Template for creating Pokemon card HTML
 function createPokemonCardHTML(pokemon) {
   let typeClasses = "";
   for (let i = 0; i < pokemon.types.length; i++) {
@@ -47,7 +41,6 @@ function createPokemonCardHTML(pokemon) {
   );
 }
 
-// Create HTML for Pokemon type badges
 function createTypeBadgesHTML(types) {
   let typeBadges = "";
   for (let i = 0; i < types.length; i++) {
@@ -64,7 +57,6 @@ function createTypeBadgesHTML(types) {
   return typeBadges;
 }
 
-// Create complete Pokemon card structure HTML
 function createPokemonCardStructure(
   pokemon,
   typeClasses,
@@ -103,7 +95,6 @@ function createPokemonCardStructure(
   );
 }
 
-// Template for page header with loading message
 function createPageHeaderTemplate() {
   return (
     '<div class="text-center mb-4">' +
@@ -114,7 +105,6 @@ function createPageHeaderTemplate() {
   );
 }
 
-// Template for search bar
 function createSearchBarTemplate() {
   return (
     '<div class="search-container mb-4">' +
@@ -132,7 +122,6 @@ function createSearchBarTemplate() {
   );
 }
 
-// Create search input group with icon and buttons
 function createSearchInputGroup() {
   return (
     '<div class="input-group">' +
@@ -143,7 +132,6 @@ function createSearchInputGroup() {
   );
 }
 
-// Create search icon HTML
 function createSearchIcon() {
   return (
     '<span class="input-group-text">' +
@@ -154,7 +142,6 @@ function createSearchIcon() {
   );
 }
 
-// Template for modal overlay structure
 function createModalOverlayTemplate() {
   return (
     '<div id="pokemon-modal" class="pokemon-modal" onclick="closeModal()">' +
@@ -166,7 +153,6 @@ function createModalOverlayTemplate() {
   );
 }
 
-// Create modal card container with navigation
 function createModalCardContainer() {
   return (
     '<div class="pokemon-card-detailed">' +
@@ -182,7 +168,6 @@ function createModalCardContainer() {
   );
 }
 
-// Template for modal front side with Pokemon details
 function createModalFrontSideTemplate(pokemon) {
   let pokemonId = pokemon.id.toString().padStart(3, "0");
   let typeBadges = createModalTypeBadgesHTML(pokemon.types);
@@ -190,7 +175,6 @@ function createModalFrontSideTemplate(pokemon) {
   return createModalFrontCardStructure(pokemon, pokemonId, typeBadges);
 }
 
-// Create type badges HTML for modal
 function createModalTypeBadgesHTML(types) {
   let typeBadges = "";
   for (let i = 0; i < types.length; i++) {
@@ -207,7 +191,6 @@ function createModalTypeBadgesHTML(types) {
   return typeBadges;
 }
 
-// Create modal front card structure HTML
 function createModalFrontCardStructure(pokemon, pokemonId, typeBadges) {
   return (
     '<div class="card-front ' +
@@ -225,7 +208,6 @@ function createModalFrontCardStructure(pokemon, pokemonId, typeBadges) {
   );
 }
 
-// Create detailed info section for modal
 function createModalDetailedInfo(pokemon, pokemonId, typeBadges) {
   return (
     '<div class="detailed-info">' +
@@ -247,7 +229,6 @@ function createModalDetailedInfo(pokemon, pokemonId, typeBadges) {
   );
 }
 
-// Template for Pokemon details section
 function createPokemonDetailsTemplate(pokemon) {
   return (
     '<div class="pokemon-details">' +
@@ -262,7 +243,6 @@ function createPokemonDetailsTemplate(pokemon) {
   );
 }
 
-// Create individual detail item HTML
 function createDetailItem(label, id, value) {
   return (
     '<div class="detail-item">' +
@@ -278,7 +258,6 @@ function createDetailItem(label, id, value) {
   );
 }
 
-// Template for modal back side with Pokemon stats
 function createModalBackSideTemplate(pokemon) {
   return (
     '<div class="card-back">' +
@@ -292,7 +271,6 @@ function createModalBackSideTemplate(pokemon) {
   );
 }
 
-// Template for all Pokemon stats including total
 function createAllStatsTemplate(stats) {
   let total = calculateStatsTotal(stats);
   return (
@@ -301,7 +279,6 @@ function createAllStatsTemplate(stats) {
   );
 }
 
-// Calculate total stats value
 function calculateStatsTotal(stats) {
   return (
     stats.hp +
@@ -313,7 +290,6 @@ function calculateStatsTotal(stats) {
   );
 }
 
-// Create basic stats template (excluding total)
 function createBasicStatsTemplate(stats) {
   return (
     createStatItemTemplate("HP", stats.hp) +
@@ -325,7 +301,6 @@ function createBasicStatsTemplate(stats) {
   );
 }
 
-// Template for individual stat item
 function createStatItemTemplate(statName, statValue, extraClass) {
   let maxValue = statName === "Total" ? 800 : 150;
   let percentage = Math.min((statValue / maxValue) * 100, 100);
@@ -341,7 +316,6 @@ function createStatItemTemplate(statName, statValue, extraClass) {
   );
 }
 
-// Build stat item HTML structure
 function buildStatItemHTML(
   itemClass,
   statName,
@@ -370,7 +344,6 @@ function buildStatItemHTML(
   );
 }
 
-// Template for Pokemon abilities section
 function createAbilitiesTemplate(abilities) {
   let abilitiesHTML = "";
   for (let i = 0; i < abilities.length; i++) {
@@ -387,7 +360,6 @@ function createAbilitiesTemplate(abilities) {
   );
 }
 
-// Template for Show More button
 function createShowMoreButtonTemplate() {
   return (
     '<button id="show-more-btn" class="btn btn-primary btn-lg" onclick="showMorePokemon()">' +
@@ -396,12 +368,10 @@ function createShowMoreButtonTemplate() {
   );
 }
 
-// Template for Show Less button
 function createShowLessButtonTemplate() {
   return '<button id="show-less-btn" class="btn btn-outline-secondary btn-lg" onclick="showLessPokemon()">Show Less</button>';
 }
 
-// Template for main container structure
 function createMainContainerTemplate() {
   return (
     '<div id="main-container" class="container py-4">' +

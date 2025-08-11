@@ -1,6 +1,3 @@
-/* Essential Custom Styles - Use Bootstrap when possible */
-
-/* Body and basic layout */
 body {
   min-height: 100vh;
   display: flex;
@@ -8,7 +5,6 @@ body {
   background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
 }
 
-/* Content width limitation for large monitors */
 .container {
   max-width: 1440px !important;
 }
@@ -33,7 +29,6 @@ main {
   width: 100%;
 }
 
-/* Pokemon Grid Layout */
 #pokemon-grid {
   display: flex;
   flex-wrap: wrap;
@@ -41,7 +36,6 @@ main {
   justify-content: center;
 }
 
-/* Pokemon Card Styles */
 .pokemon-card {
   width: 200px;
   height: 263px;
@@ -123,7 +117,6 @@ main {
   border: 1px solid rgba(255, 255, 255, 0.3);
 }
 
-/* Modal Styles */
 .pokemon-modal {
   display: none;
   position: fixed;
@@ -175,7 +168,6 @@ main {
   color: #ff6b6b;
 }
 
-/* Card Flip Animation */
 .pokemon-card-detailed {
   perspective: 1000px;
   width: 100%;
@@ -220,7 +212,6 @@ main {
   flex-direction: column;
 }
 
-/* Stats Styling */
 .stat-item {
   display: flex;
   align-items: center;
@@ -283,7 +274,6 @@ main {
   font-weight: bold;
 }
 
-/* Ability Badges */
 .abilities-section {
   margin-top: 30px;
 }
@@ -305,7 +295,6 @@ main {
   border: 1px solid rgba(255, 255, 255, 0.3);
 }
 
-/* Modal Content Improvements */
 .detailed-image-container {
   text-align: center;
   margin-bottom: 20px;
@@ -384,7 +373,6 @@ main {
   font-size: 2rem;
 }
 
-/* Footer Styles */
 footer {
   background: rgba(255, 255, 255, 0.8);
   backdrop-filter: blur(10px);
@@ -404,7 +392,6 @@ footer {
   text-decoration: none;
 }
 
-/* Responsive Design */
 @media (max-width: 768px) {
   .pokemon-card {
     width: 160px;
@@ -442,7 +429,6 @@ footer {
   .pokemon-card-detailed {
     height: auto;
     min-height: 450px;
-    /* padding: 10px; */
   }
 
   .card-front,
@@ -483,7 +469,6 @@ footer {
   }
 }
 
-/* Modal Navigation Arrows */
 .modal-nav-arrow {
   position: absolute;
   width: 50px;
@@ -527,7 +512,6 @@ footer {
   height: 24px;
 }
 
-/* Arrow transition effects for card flipping */
 .arrow-fade-out {
   opacity: 0 !important;
   transform: scale(0.8) !important;

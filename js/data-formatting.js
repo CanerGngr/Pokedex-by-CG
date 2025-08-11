@@ -1,6 +1,3 @@
-// Pokemon Data Formatting Functions
-
-// Extract English description from species data
 function extractEnglishDescription(speciesData) {
   let description = "No description available";
   for (let i = 0; i < speciesData.flavor_text_entries.length; i++) {
@@ -13,7 +10,6 @@ function extractEnglishDescription(speciesData) {
   return description;
 }
 
-// Build complete Pokemon object with all data
 function buildPokemonObject(pokemon, description) {
   return {
     id: pokemon.id,
@@ -29,19 +25,16 @@ function buildPokemonObject(pokemon, description) {
   };
 }
 
-// Format Pokemon name with proper capitalization
 function formatPokemonName(name) {
   return name.charAt(0).toUpperCase() + name.slice(1);
 }
 
-// Get best available Pokemon image
 function getPokemonImage(sprites) {
   return (
     sprites.other["official-artwork"].front_default || sprites.front_default
   );
 }
 
-// Format Pokemon types with proper capitalization
 function formatPokemonTypes(types) {
   let formattedTypes = [];
   for (let i = 0; i < types.length; i++) {
@@ -52,17 +45,14 @@ function formatPokemonTypes(types) {
   return formattedTypes;
 }
 
-// Format height in meters
 function formatHeight(height) {
   return height / 10 + " m";
 }
 
-// Format weight in kilograms
 function formatWeight(weight) {
   return weight / 10 + " kg";
 }
 
-// Format Pokemon stats object
 function formatPokemonStats(stats) {
   return {
     hp: stats[0].base_stat,
@@ -74,7 +64,6 @@ function formatPokemonStats(stats) {
   };
 }
 
-// Format Pokemon abilities with proper capitalization
 function formatPokemonAbilities(abilities) {
   let formattedAbilities = [];
   for (let i = 0; i < abilities.length; i++) {
@@ -86,7 +75,6 @@ function formatPokemonAbilities(abilities) {
   return formattedAbilities;
 }
 
-// Get generation based on Pokemon ID
 function getGeneration(id) {
   if (id <= 151) return "I";
   if (id <= 251) return "II";

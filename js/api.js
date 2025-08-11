@@ -1,11 +1,6 @@
-// Pokemon API Functions
-
-// Fetch Pokemon from PokeAPI
 async function loadPokemonList() {
   try {
     initializePage();
-    console.log(currentOffset);
-
     let pokemonList = await fetchPokemonDataToList(currentOffset);
     await loadAllPokemonDetails(pokemonList);
     isLoading = false;
@@ -26,14 +21,12 @@ async function fetchPokemonDataToList(currentOffset) {
   return data.results;
 }
 
-// Um Details parallel (schneller) zu laden. Von KI :)
 async function loadAllPokemonDetails(pokemonList) {
   const detailPromises = createDetailPromises(pokemonList);
   const detailsList = await Promise.all(detailPromises);
   processLoadedDetails(detailsList);
 }
 
-// Create array of detail fetch promises
 function createDetailPromises(pokemonList) {
   const detailPromises = [];
   for (let i = 0; i < pokemonList.length; i++) {
@@ -42,7 +35,6 @@ function createDetailPromises(pokemonList) {
   return detailPromises;
 }
 
-// Process and display loaded Pokemon details
 function processLoadedDetails(detailsList) {
   detailsList.sort((a, b) => a.id - b.id);
 
@@ -81,14 +73,12 @@ async function addMorePokemonCard() {
   }
 }
 
-// Display new Pokemon cards on the grid
 function displayNewPokemonCards(newPokemons) {
   for (let i = 0; i < newPokemons.length; i++) {
     addPokemonCard(newPokemons[i]);
   }
 }
 
-// Fetch detailed Pokemon data
 async function fetchPokemonDetails(url) {
   try {
     let pokemon = await fetchBasicPokemonData(url);
@@ -101,13 +91,11 @@ async function fetchPokemonDetails(url) {
   }
 }
 
-// Fetch basic Pokemon data from API
 async function fetchBasicPokemonData(url) {
   let response = await fetch(url);
   return await response.json();
 }
 
-// Fetch Pokemon species data for description
 async function fetchPokemonSpecies(speciesUrl) {
   let response = await fetch(speciesUrl);
   return await response.json();

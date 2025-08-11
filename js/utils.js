@@ -1,6 +1,3 @@
-// Pokemon Utility Functions
-
-// Show error message
 function showError(message) {
   let errorDiv = document.createElement("div");
   errorDiv.className = "alert alert-danger text-center";
@@ -12,7 +9,6 @@ function showError(message) {
   }
 }
 
-// Show loading message
 function showLoading() {
   let loadingDiv = document.createElement("div");
   loadingDiv.id = "loading-message";
@@ -25,7 +21,6 @@ function showLoading() {
   }
 }
 
-// Remove loading message
 function hideLoading() {
   let loadingDiv = document.getElementById("loading-message");
   if (loadingDiv) {

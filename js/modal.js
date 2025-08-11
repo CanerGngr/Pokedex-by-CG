@@ -1,6 +1,3 @@
-// Pokemon Modal Functions
-
-// Create modal structure if it doesn't exist
 function createModalIfNeeded() {
   let existingModal = document.getElementById("pokemon-modal");
   if (!existingModal) {
@@ -9,7 +6,6 @@ function createModalIfNeeded() {
   }
 }
 
-// Populate modal with Pokemon content
 function populateModalContent(pokemon) {
   let cardInner = document.getElementById("modal-card-inner");
 
@@ -18,7 +14,6 @@ function populateModalContent(pokemon) {
     createModalBackSideTemplate(pokemon);
 }
 
-// Open Modal Function
 function openModal(pokemonId) {
   let pokemon = pokemonData.find((p) => p.id === pokemonId);
   if (!pokemon) return;
@@ -33,7 +28,6 @@ function openModal(pokemonId) {
   document.body.style.overflow = "hidden";
 }
 
-// Close Modal Function
 function closeModal() {
   let pokemonModal = document.getElementById("pokemon-modal");
   let cardInnerElements = document.getElementsByClassName("card-inner");
@@ -47,7 +41,6 @@ function closeModal() {
   }
 }
 
-// Flip Card Function (to Stats Side)
 function flipCard() {
   let cardInnerElements = document.getElementsByClassName("card-inner");
   let cardInner = cardInnerElements[0];
@@ -60,7 +53,6 @@ function flipCard() {
   }, 800);
 }
 
-// Flip Card Back Function (to Info Side)
 function flipCardBack() {
   let cardInnerElements = document.getElementsByClassName("card-inner");
   let cardInner = cardInnerElements[0];
@@ -73,7 +65,6 @@ function flipCardBack() {
   }, 800);
 }
 
-// Navigate to previous Pokemon in modal
 function navigateToPreviousPokemon() {
   if (!currentPokemon) return;
 
@@ -82,12 +73,10 @@ function navigateToPreviousPokemon() {
   navigateToIndex(previousIndex);
 }
 
-// Get previous index with wrap-around
 function getPreviousIndex(currentIndex) {
   return currentIndex - 1 < 0 ? pokemonData.length - 1 : currentIndex - 1;
 }
 
-// Navigate to next Pokemon in modal
 function navigateToNextPokemon() {
   if (!currentPokemon) return;
 
@@ -96,12 +85,10 @@ function navigateToNextPokemon() {
   navigateToIndex(nextIndex);
 }
 
-// Get next index with wrap-around
 function getNextIndex(currentIndex) {
   return currentIndex + 1 >= pokemonData.length ? 0 : currentIndex + 1;
 }
 
-// Navigate to Pokemon at specific index
 function navigateToIndex(index) {
   let pokemon = pokemonData[index];
   currentPokemon = pokemon;
@@ -109,7 +96,6 @@ function navigateToIndex(index) {
   updateModalNavigation();
 }
 
-// Find Pokemon index in data array
 function findPokemonIndex(pokemonId) {
   for (let i = 0; i < pokemonData.length; i++) {
     if (pokemonData[i].id === pokemonId) {
@@ -119,7 +105,6 @@ function findPokemonIndex(pokemonId) {
   return 0;
 }
 
-// Update modal navigation button visibility
 function updateModalNavigation() {
   let leftArrow = document.getElementById("modal-nav-left");
   let rightArrow = document.getElementById("modal-nav-right");
@@ -130,7 +115,6 @@ function updateModalNavigation() {
   }
 }
 
-// Hide arrows with fade out transition
 function hideArrowsWithTransition() {
   let leftArrow = document.getElementById("modal-nav-left");
   let rightArrow = document.getElementById("modal-nav-right");
@@ -138,7 +122,6 @@ function hideArrowsWithTransition() {
   applyArrowTransition(rightArrow, "arrow-fade-out", "arrow-fade-in");
 }
 
-// Show arrows with fade in transition
 function showArrowsWithTransition() {
   let leftArrow = document.getElementById("modal-nav-left");
   let rightArrow = document.getElementById("modal-nav-right");
@@ -146,7 +129,6 @@ function showArrowsWithTransition() {
   applyArrowTransitionIfVisible(rightArrow, "arrow-fade-in", "arrow-fade-out");
 }
 
-// Apply transition classes to arrow element
 function applyArrowTransition(arrow, addClass, removeClass) {
   if (arrow) {
     arrow.classList.remove(removeClass);
@@ -154,7 +136,6 @@ function applyArrowTransition(arrow, addClass, removeClass) {
   }
 }
 
-// Apply transition to arrow if it's visible
 function applyArrowTransitionIfVisible(arrow, addClass, removeClass) {
   if (arrow && arrow.style.display !== "none") {
     applyArrowTransition(arrow, addClass, removeClass);
