@@ -78,16 +78,13 @@ function navigateToPreviousPokemon() {
   if (!currentPokemon) return;
 
   let currentIndex = findPokemonIndex(currentPokemon.id);
-  let previousIndex = currentIndex - 1;
+  let previousIndex = getPreviousIndex(currentIndex);
+  navigateToIndex(previousIndex);
+}
 
-  if (previousIndex < 0) {
-    previousIndex = pokemonData.length - 1;
-  }
-
-  let previousPokemon = pokemonData[previousIndex];
-  currentPokemon = previousPokemon;
-  populateModalContent(previousPokemon);
-  updateModalNavigation();
+// Get previous index with wrap-around
+function getPreviousIndex(currentIndex) {
+  return currentIndex - 1 < 0 ? pokemonData.length - 1 : currentIndex - 1;
 }
 
 // Navigate to next Pokemon in modal
@@ -95,15 +92,20 @@ function navigateToNextPokemon() {
   if (!currentPokemon) return;
 
   let currentIndex = findPokemonIndex(currentPokemon.id);
-  let nextIndex = currentIndex + 1;
+  let nextIndex = getNextIndex(currentIndex);
+  navigateToIndex(nextIndex);
+}
 
-  if (nextIndex >= pokemonData.length) {
-    nextIndex = 0;
-  }
+// Get next index with wrap-around
+function getNextIndex(currentIndex) {
+  return currentIndex + 1 >= pokemonData.length ? 0 : currentIndex + 1;
+}
 
-  let nextPokemon = pokemonData[nextIndex];
-  currentPokemon = nextPokemon;
-  populateModalContent(nextPokemon);
+// Navigate to Pokemon at specific index
+function navigateToIndex(index) {
+  let pokemon = pokemonData[index];
+  currentPokemon = pokemon;
+  populateModalContent(pokemon);
   updateModalNavigation();
 }
 
@@ -132,28 +134,29 @@ function updateModalNavigation() {
 function hideArrowsWithTransition() {
   let leftArrow = document.getElementById("modal-nav-left");
   let rightArrow = document.getElementById("modal-nav-right");
-
-  if (leftArrow) {
-    leftArrow.classList.remove("arrow-fade-in");
-    leftArrow.classList.add("arrow-fade-out");
-  }
-  if (rightArrow) {
-    rightArrow.classList.remove("arrow-fade-in");
-    rightArrow.classList.add("arrow-fade-out");
-  }
+  applyArrowTransition(leftArrow, "arrow-fade-out", "arrow-fade-in");
+  applyArrowTransition(rightArrow, "arrow-fade-out", "arrow-fade-in");
 }
 
 // Show arrows with fade in transition
 function showArrowsWithTransition() {
   let leftArrow = document.getElementById("modal-nav-left");
   let rightArrow = document.getElementById("modal-nav-right");
+  applyArrowTransitionIfVisible(leftArrow, "arrow-fade-in", "arrow-fade-out");
+  applyArrowTransitionIfVisible(rightArrow, "arrow-fade-in", "arrow-fade-out");
+}
 
-  if (leftArrow && leftArrow.style.display !== "none") {
-    leftArrow.classList.remove("arrow-fade-out");
-    leftArrow.classList.add("arrow-fade-in");
+// Apply transition classes to arrow element
+function applyArrowTransition(arrow, addClass, removeClass) {
+  if (arrow) {
+    arrow.classList.remove(removeClass);
+    arrow.classList.add(addClass);
   }
-  if (rightArrow && rightArrow.style.display !== "none") {
-    rightArrow.classList.remove("arrow-fade-out");
-    rightArrow.classList.add("arrow-fade-in");
+}
+
+// Apply transition to arrow if it's visible
+function applyArrowTransitionIfVisible(arrow, addClass, removeClass) {
+  if (arrow && arrow.style.display !== "none") {
+    applyArrowTransition(arrow, addClass, removeClass);
   }
 }
