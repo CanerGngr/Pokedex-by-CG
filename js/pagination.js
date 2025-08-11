@@ -23,18 +23,23 @@ function revealHiddenPokemon() {
 // Process hidden cards and reveal them
 function processHiddenCards(pokemonCards) {
   let revealedCount = 0;
+  let maxCards = Math.min(pokemonData.length, currentDisplayCount + limit);
 
-  for (
-    let i = currentDisplayCount;
-    i < pokemonData.length && revealedCount < limit;
-    i++
-  ) {
-    if (pokemonCards[i] && pokemonCards[i].style.display === "none") {
-      pokemonCards[i].style.display = "block";
+  for (let i = currentDisplayCount; i < maxCards; i++) {
+    if (revealCard(pokemonCards[i])) {
       revealedCount++;
     }
   }
   return revealedCount;
+}
+
+// Reveal a single card if it's hidden
+function revealCard(card) {
+  if (card && card.style.display === "none") {
+    card.style.display = "block";
+    return true;
+  }
+  return false;
 }
 
 // Handle successfully revealed Pokemon
@@ -113,15 +118,23 @@ function buildPaginationButtonsHTML() {
 // Scroll to newly revealed Pokemon cards with smooth animation
 function scrollToNewCards(startIndex) {
   let paginationContainer = document.getElementById("pagination-container");
+  if (!paginationContainer) return;
 
-  if (paginationContainer) {
-    let containerRect = paginationContainer.getBoundingClientRect();
-    let currentScrollY = window.pageYOffset;
-    let targetY = currentScrollY + containerRect.top - 50;
+  let targetY = calculateScrollTarget(paginationContainer);
+  performSmoothScroll(targetY);
+}
 
-    window.scrollTo({
-      top: targetY,
-      behavior: "smooth",
-    });
-  }
+// Calculate scroll target position
+function calculateScrollTarget(container) {
+  let containerRect = container.getBoundingClientRect();
+  let currentScrollY = window.pageYOffset;
+  return currentScrollY + containerRect.top - 50;
+}
+
+// Perform smooth scroll to target position
+function performSmoothScroll(targetY) {
+  window.scrollTo({
+    top: targetY,
+    behavior: "smooth",
+  });
 }
