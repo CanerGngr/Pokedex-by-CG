@@ -8,6 +8,8 @@ async function loadPokemonList() {
 
     let pokemonList = await fetchPokemonDataToList(currentOffset);
     await loadAllPokemonDetails(pokemonList);
+    isLoading = false;
+    hideLoadingScreen();
     finalizePokemonLoading();
   } catch (error) {
     handleLoadingError(error);
@@ -43,7 +45,7 @@ function createDetailPromises(pokemonList) {
 // Process and display loaded Pokemon details
 function processLoadedDetails(detailsList) {
   detailsList.sort((a, b) => a.id - b.id);
-  
+
   for (const details of detailsList) {
     pokemonData.push(details);
     addPokemonCard(details);
