@@ -6,6 +6,64 @@ function createModalIfNeeded() {
   }
 }
 
+function createPokemonCardHTML(pokemon) {
+  let typeClasses = "";
+  for (let i = 0; i < pokemon.types.length; i++) {
+    typeClasses += pokemon.types[i].toLowerCase();
+    if (i < pokemon.types.length - 1) {
+      typeClasses += " ";
+    }
+  }
+  let pokemonId = pokemon.id.toString().padStart(3, "0");
+  let typeBadges = createTypeBadgesHTML(pokemon.types);
+
+  return createPokemonCardStructure(
+    pokemon,
+    typeClasses,
+    pokemonId,
+    typeBadges
+  );
+}
+
+function createModalFrontSideTemplate(pokemon) {
+  let pokemonId = pokemon.id.toString().padStart(3, "0");
+  let typeBadges = createModalTypeBadgesHTML(pokemon.types);
+
+  return createModalFrontCardStructure(pokemon, pokemonId, typeBadges);
+}
+
+function createModalTypeBadgesHTML(types) {
+  let typeBadges = "";
+  for (let i = 0; i < types.length; i++) {
+    typeBadges +=
+      '<span class="type-badge ' +
+      types[i].toLowerCase() +
+      '">' +
+      '<span class="type-icon ' +
+      types[i].toLowerCase() +
+      '"></span>' +
+      types[i] +
+      "</span>";
+  }
+  return typeBadges;
+}
+
+function createTypeBadgesHTML(types) {
+  let typeBadges = "";
+  for (let i = 0; i < types.length; i++) {
+    typeBadges +=
+      '<span class="type-badge ' +
+      types[i].toLowerCase() +
+      '">' +
+      '<span class="type-icon ' +
+      types[i].toLowerCase() +
+      '"></span>' +
+      types[i] +
+      "</span>";
+  }
+  return typeBadges;
+}
+
 function populateModalContent(pokemon) {
   let cardInner = document.getElementById("modal-card-inner");
 

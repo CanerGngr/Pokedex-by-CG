@@ -64,6 +64,51 @@ function formatPokemonStats(stats) {
   };
 }
 
+function createBasicStatsTemplate(stats) {
+  return (
+    createStatItemTemplate("HP", stats.hp) +
+    createStatItemTemplate("Attack", stats.attack) +
+    createStatItemTemplate("Defense", stats.defense) +
+    createStatItemTemplate("Sp. Att", stats.specialAttack) +
+    createStatItemTemplate("Sp. Def", stats.specialDefense) +
+    createStatItemTemplate("Speed", stats.speed)
+  );
+}
+
+function createStatItemTemplate(statName, statValue, extraClass) {
+  let maxValue = statName === "Total" ? 800 : 150;
+  let percentage = Math.min((statValue / maxValue) * 100, 100);
+  let cssClass = statName.toLowerCase().replace(".", "").replace(" ", "-");
+  let itemClass = extraClass ? "stat-item " + extraClass : "stat-item";
+
+  return buildStatItemHTML(
+    itemClass,
+    statName,
+    cssClass,
+    percentage,
+    statValue
+  );
+}
+
+function createAllStatsTemplate(stats) {
+  let total = calculateStatsTotal(stats);
+  return (
+    createBasicStatsTemplate(stats) +
+    createStatItemTemplate("Total", total, "total-stats")
+  );
+}
+
+function calculateStatsTotal(stats) {
+  return (
+    stats.hp +
+    stats.attack +
+    stats.defense +
+    stats.specialAttack +
+    stats.specialDefense +
+    stats.speed
+  );
+}
+
 function formatPokemonAbilities(abilities) {
   let formattedAbilities = [];
   for (let i = 0; i < abilities.length; i++) {
